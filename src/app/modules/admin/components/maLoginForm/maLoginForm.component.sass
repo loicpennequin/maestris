@@ -1,0 +1,46 @@
+.maLoginForm-component
+    h1
+        background: $pink
+        border-top-left-radius: 6px
+        border-top-right-radius: 6px
+        padding: 10px 15px
+        text-align: center
+        border: solid 2px lighten($pink, 20%)
+        border-bottom-color: transparent
+
+    form
+        background: $white
+        padding: 10px
+        border-bottom-left-radius: 6px
+        border-bottom-right-radius: 6px
+        border: solid 2px lighten($pink, 20%)
+        border-top-color: transparent
+
+    .form-control
+        margin-bottom: 5px
+        label
+            color: $dark
+            display: block
+            font-family: $font-title
+            font-weight: 700
+            font-size: 1.1em
+            margin-bottom: 5px
+
+        button
+            background: linear-gradient($pink, darken($pink, 10%))
+            color: $white
+            padding: 10px
+            font-family: $font-title
+            font-weight: 700
+            margin-top: 5px
+            border-radius: 6px
+            cursor: pointer
+            &:hover
+                background: linear-gradient(saturate(lighten($pink, 10%), 10%), $pink)
+
+    a
+        color: $blue
+        font-family: $font-title
+
+    p
+        color: $red

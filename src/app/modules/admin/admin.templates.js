@@ -1,0 +1,4 @@
+angular.module('admin').run(['$templateCache', function($templateCache) {
+    $templateCache.put('maLoginForm.component.html',
+        "<div class=\"maLoginForm-component\">\n    <h1>Identification</h1>\n    <form>\n        <div class=\"form-control\">\n            <label>login</label>\n            <input type=\"text\" ng-model=\"$ctrl.credentials.login\"/>\n        </div>\n        <div class=\"form-control\">\n            <label>mot de passe</label>\n            <input type=\"password\" ng-model=\"$ctrl.credentials.password\"/>\n        </div>\n        <div class=\"form-control\">\n            <button ng-click=$ctrl.onLogin()><i class='fa fa-sign-in'></i> Connexion</button>\n        </div>\n        <p ng-if=\"$ctrl.failed\">*Identifiants incorrects.</p>\n    </form>\n    <a href=\"/\">retour à l'accueil</a>\n</div>\n");
+}]);

@@ -1,0 +1,31 @@
+.maNavbar-component
+    background: $dark
+    color: $white
+    border-bottom: solid 1px $white
+    position: fixed
+    top: 0
+    width: 100%
+    ul
+        display: flex
+        justify-content: space-around
+        li
+            padding: 10px 15px
+            font-family: $font-title
+            font-weight: 700
+            font-size: 1.2em
+            transition: all 0.5s
+            position: relative
+            &::after
+                content: ""
+                position: absolute
+                bottom: 15%
+                left: 50%
+                height: 2px
+                width: 0
+                background: $pink
+                transition: all 0.5s
+            &:hover
+                &::after
+                    left: 10%
+                    width: 80%
+                    box-shadow: 0 0 0 1px $white

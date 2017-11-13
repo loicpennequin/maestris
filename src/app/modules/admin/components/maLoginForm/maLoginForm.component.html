@@ -1,0 +1,18 @@
+<div class="maLoginForm-component">
+    <h1>Identification</h1>
+    <form>
+        <div class="form-control">
+            <label>login</label>
+            <input type="text" ng-model="$ctrl.credentials.login"/>
+        </div>
+        <div class="form-control">
+            <label>mot de passe</label>
+            <input type="password" ng-model="$ctrl.credentials.password"/>
+        </div>
+        <div class="form-control">
+            <button ng-click=$ctrl.onLogin()><i class='fa fa-sign-in'></i> Connexion</button>
+        </div>
+        <p ng-if="$ctrl.failed">*Identifiants incorrects.</p>
+    </form>
+    <a href="/">retour à l'accueil</a>
+</div>

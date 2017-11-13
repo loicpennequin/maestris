@@ -1,0 +1,27 @@
+.maSidebar-component
+    width: 20vw
+    ul
+        position: fixed
+        top: 0
+        left: 0
+        width: 18vw
+        height: 100vh
+        background: $dark
+        padding: 10vh 0
+        display: flex
+        flex-direction: column
+        justify-content: center
+        color: $white
+        height: 100%
+        li
+            padding: 25px 30px
+            text-align: center
+            font-family: $font-title
+            font-size: 1.1em
+            &:hover
+                background: $pink
+            &.logout
+                background: linear-gradient($pink, darken($pink, 5%))
+                font-size: 1.2em
+                &:hover
+                    background: linear-gradient(lighten($pink, 5%), $pink)
