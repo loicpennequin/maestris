@@ -7,6 +7,11 @@
             <input type="test" ng-model="$ctrl.newPost.title" placeholder="Titre de votre article"/>
         </div>
         <div class="form-control">
+            <select ng-model="$ctrl.newPost.category_id" ng-options="category.id as category.name for category in $ctrl.categories track by category.name">
+                <option value="" disabled>- Choisissez une catégorie -</option>
+            </select>
+        </div>
+        <div class="form-control">
             <input type="test" ng-model="$ctrl.newPost.summary" placeholder="En-tête de votre article"/>
         </div>
         <div class="form-control">

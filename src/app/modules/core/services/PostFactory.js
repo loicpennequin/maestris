@@ -4,7 +4,7 @@
 angular.module('core')
   .factory('PostFactory', ($http)=>{
       return {
-          getPosts : function(){
+          getAll : function(){
               return $http.get('/api/posts')
                 .then(function(response) {
                     return response;
@@ -13,7 +13,7 @@ angular.module('core')
                     return error
                 })
           },
-          addPost : function(post){
+          add : function(post){
               return $http.post('/api/posts', post)
                 .then(function(response) {
                     return response;

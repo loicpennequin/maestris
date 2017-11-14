@@ -60917,6 +60917,7 @@ require('./modules/admin/components/maPostTable/maPostTable.component.js');
 require('./modules/admin/components/maTextEditor/maTextEditor.component.js');
 require('./modules/admin/components/maLoginForm/maLoginForm.component.js');
 require('./modules/core/core.js');
+require('./modules/core/services/CategoryFactory.js');
 require('./modules/core/services/PostFactory.js');
 require('./modules/core/core.templates.js');
 require('./modules/core/components/maArticleListItem/maArticleListItem.component.js');
@@ -60941,7 +60942,7 @@ require('./modules/routes/components/maAdminDashboard/maAdminDashboard.component
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 
-},{"./app.config.js":87,"./app.js":88,"./app.routes.js":89,"./modules/admin/admin.js":90,"./modules/admin/admin.templates.js":91,"./modules/admin/components/maLoginForm/maLoginForm.component.js":92,"./modules/admin/components/maPostTable/maPostTable.component.js":93,"./modules/admin/components/maTextEditor/maTextEditor.component.js":94,"./modules/admin/services/AuthFactory.js":95,"./modules/core/components/maArticleListItem/maArticleListItem.component.js":96,"./modules/core/components/maArticlesList/maArticlesList.component.js":97,"./modules/core/core.js":98,"./modules/core/core.templates.js":99,"./modules/core/services/PostFactory.js":100,"./modules/layout/components/maFooter/maFooter.component.js":101,"./modules/layout/components/maHeader/maHeader.component.js":102,"./modules/layout/components/maLandingPage/maLandingPage.component.js":103,"./modules/layout/components/maNavbar/maNavbar.component.js":104,"./modules/layout/components/maSidebar/maSidebar.component.js":105,"./modules/layout/layout.js":106,"./modules/layout/layout.templates.js":107,"./modules/routes/components/maAdminCategories/maAdminCategories.component.js":108,"./modules/routes/components/maAdminComments/maAdminComments.component.js":109,"./modules/routes/components/maAdminDashboard/maAdminDashboard.component.js":110,"./modules/routes/components/maAdminImages/maAdminImages.component.js":111,"./modules/routes/components/maAdminPosts/maAdminPosts.component.js":112,"./modules/routes/components/maControlPanel/maControlPanel.component.js":113,"./modules/routes/components/maHome/maHome.component.js":114,"./modules/routes/components/maLogin/maLogin.component.js":115,"./modules/routes/routes.js":116,"./modules/routes/routes.templates.js":117,"@uirouter/angularjs":1,"angular":84,"angular-animate":75,"angular-cookies":77,"angular-messages":79,"angular-resource":81,"angular-ui-tinymce":82,"jquery":85}],87:[function(require,module,exports){
+},{"./app.config.js":87,"./app.js":88,"./app.routes.js":89,"./modules/admin/admin.js":90,"./modules/admin/admin.templates.js":91,"./modules/admin/components/maLoginForm/maLoginForm.component.js":92,"./modules/admin/components/maPostTable/maPostTable.component.js":93,"./modules/admin/components/maTextEditor/maTextEditor.component.js":94,"./modules/admin/services/AuthFactory.js":95,"./modules/core/components/maArticleListItem/maArticleListItem.component.js":96,"./modules/core/components/maArticlesList/maArticlesList.component.js":97,"./modules/core/core.js":98,"./modules/core/core.templates.js":99,"./modules/core/services/CategoryFactory.js":100,"./modules/core/services/PostFactory.js":101,"./modules/layout/components/maFooter/maFooter.component.js":102,"./modules/layout/components/maHeader/maHeader.component.js":103,"./modules/layout/components/maLandingPage/maLandingPage.component.js":104,"./modules/layout/components/maNavbar/maNavbar.component.js":105,"./modules/layout/components/maSidebar/maSidebar.component.js":106,"./modules/layout/layout.js":107,"./modules/layout/layout.templates.js":108,"./modules/routes/components/maAdminCategories/maAdminCategories.component.js":109,"./modules/routes/components/maAdminComments/maAdminComments.component.js":110,"./modules/routes/components/maAdminDashboard/maAdminDashboard.component.js":111,"./modules/routes/components/maAdminImages/maAdminImages.component.js":112,"./modules/routes/components/maAdminPosts/maAdminPosts.component.js":113,"./modules/routes/components/maControlPanel/maControlPanel.component.js":114,"./modules/routes/components/maHome/maHome.component.js":115,"./modules/routes/components/maLogin/maLogin.component.js":116,"./modules/routes/routes.js":117,"./modules/routes/routes.templates.js":118,"@uirouter/angularjs":1,"angular":84,"angular-animate":75,"angular-cookies":77,"angular-messages":79,"angular-resource":81,"angular-ui-tinymce":82,"jquery":85}],87:[function(require,module,exports){
 
 },{}],88:[function(require,module,exports){
 angular.module('maestris', ['admin', 'routes', 'layout', 'core', 'ui.tinymce', 'ui.router', 'ngMessages', 'ngAnimate', 'ngCookies', 'ngResource']);
@@ -60984,13 +60985,13 @@ angular.module('admin', []);
 
 },{}],91:[function(require,module,exports){
 angular.module('admin').run(['$templateCache', function ($templateCache) {
-    $templateCache.put('maLoginForm.component.html', "<div class=\"maLoginForm-component\">\n    <h1>Identification</h1>\n    <form>\n        <div class=\"form-control\">\n            <label>login</label>\n            <input type=\"text\" ng-model=\"$ctrl.credentials.login\"/>\n        </div>\n        <div class=\"form-control\">\n            <label>mot de passe</label>\n            <input type=\"password\" ng-model=\"$ctrl.credentials.password\"/>\n        </div>\n        <div class=\"form-control\">\n            <button ng-click=$ctrl.onLogin()><i class='fa fa-sign-in'></i> Connexion</button>\n        </div>\n        <p ng-if=\"$ctrl.failed\">*Identifiants incorrects.</p>\n    </form>\n    <a href=\"/\">retour à l'accueil</a>\n</div>\n");
+    $templateCache.put('maLoginForm.component.html', "<div class=\"maLoginForm-component\">\r\n    <h1>Identification</h1>\r\n    <form>\r\n        <div class=\"form-control\">\r\n            <label>login</label>\r\n            <input type=\"text\" ng-model=\"$ctrl.credentials.login\"/>\r\n        </div>\r\n        <div class=\"form-control\">\r\n            <label>mot de passe</label>\r\n            <input type=\"password\" ng-model=\"$ctrl.credentials.password\"/>\r\n        </div>\r\n        <div class=\"form-control\">\r\n            <button ng-click=$ctrl.onLogin()><i class='fa fa-sign-in'></i> Connexion</button>\r\n        </div>\r\n        <p ng-if=\"$ctrl.failed\">*Identifiants incorrects.</p>\r\n    </form>\r\n    <a href=\"/\">retour à l'accueil</a>\r\n</div>\r\n");
 }]);
 angular.module('admin').run(['$templateCache', function ($templateCache) {
-    $templateCache.put('maPostTable.component.html', "<div class=\"maPostTable-component\">\n    <table>\n        <thead>\n            <tr>\n                <th>Titre</th>\n                <th>Categorie</th>\n                <th>Date de publication</th>\n                <th>Commentaires</th>\n                <th>Options</th>\n            </tr>\n        </thead>\n        <tbody>\n            <tr ng-repeat=\"post in $ctrl.posts\">\n                <td>{{post.title}}</td>\n                <td>{{post.category_name}}</td>\n                <td>{{post.created_at | date : 'EEE d MMM yyyy'}}</td>\n                <td>Soon</td>\n                <td>\n                    <button>Voir</button>\n                    <button>Editer</button>\n                    <button>Supprimer</button>\n                </td>\n            </tr>\n        </tbody>\n    </table>\n</div>\n");
+    $templateCache.put('maPostTable.component.html', "<div class=\"maPostTable-component\">\r\n    <table>\r\n        <thead>\r\n            <tr>\r\n                <th>Titre</th>\r\n                <th>Categorie</th>\r\n                <th>Date de publication</th>\r\n                <th>Commentaires</th>\r\n                <th>Options</th>\r\n            </tr>\r\n        </thead>\r\n        <tbody>\r\n            <tr ng-repeat=\"post in $ctrl.posts\">\r\n                <td>{{post.title}}</td>\r\n                <td>{{post.category_name}}</td>\r\n                <td>{{post.created_at | date : 'EEE d MMM yyyy'}}</td>\r\n                <td>Soon</td>\r\n                <td>\r\n                    <button><i class=\"fa fa-search\" aria-hidden=\"true\"></i>Voir</button>\r\n                    <button><i class=\"fa fa-pencil\" aria-hidden=\"true\"></i>Editer</button>\r\n                    <button><i class=\"fa fa-times\" aria-hidden=\"true\"></i>Supprimer</button>\r\n                </td>\r\n            </tr>\r\n        </tbody>\r\n    </table>\r\n</div>\r\n");
 }]);
 angular.module('admin').run(['$templateCache', function ($templateCache) {
-    $templateCache.put('maTextEditor.component.html', "<div class=\"maTextEditor-component\">\n      <textarea ui-tinymce=\"$ctrl.tinymceOptions\" ng-model=\"$ctrl.model\" ng-change=\"$ctrl.setPost()\"></textarea>\n</div>\n");
+    $templateCache.put('maTextEditor.component.html', "<div class=\"maTextEditor-component\">\r\n      <textarea ui-tinymce=\"$ctrl.tinymceOptions\" ng-model=\"$ctrl.model\" ng-change=\"$ctrl.setPost()\"></textarea>\r\n</div>\r\n");
 }]);
 
 },{}],92:[function(require,module,exports){
@@ -61023,10 +61024,6 @@ angular.module('admin').component('maPostTable', {
 
 function maPostTableController() {
   let $ctrl = this;
-
-  $ctrl.$onInit = function () {
-    console.log($ctrl);
-  };
 };
 
 },{}],94:[function(require,module,exports){
@@ -61034,28 +61031,28 @@ function maPostTableController() {
 'use strict';
 
 angular.module('admin').component('maTextEditor', {
-    bindings: {
-        model: '<',
-        onChange: '&'
-    },
-    templateUrl: 'maTextEditor.component.html',
-    controller: maTextEditorController
+  bindings: {
+    model: '<',
+    onChange: '&'
+  },
+  templateUrl: 'maTextEditor.component.html',
+  controller: maTextEditorController
 });
 
 function maTextEditorController() {
-    let $ctrl = this;
+  let $ctrl = this;
 
-    $ctrl.tinymceOptions = {
-        plugins: 'advlist autolink link image lists charmap preview colorpicker textcolor autoresize emoticons wordcount',
-        toolbar: "bold italic underline strikethrough forecolor backcolor alignleft aligncenter alignright alignjustify image styleselect fontsizeselect emoticons",
-        autorzsize_bottom_margin: 30,
-        autoresize_on_init: false,
-        theme: 'modern'
-    };
+  $ctrl.tinymceOptions = {
+    plugins: 'advlist autolink link image lists charmap preview colorpicker textcolor autoresize emoticons wordcount',
+    toolbar: "bold italic underline strikethrough forecolor backcolor alignleft aligncenter alignright alignjustify image styleselect fontsizeselect emoticons",
+    autorzsize_bottom_margin: 30,
+    autoresize_on_init: false,
+    theme: 'modern'
+  };
 
-    $ctrl.setPost = function () {
-        $ctrl.onChange({ model: $ctrl.model });
-    };
+  $ctrl.setPost = function () {
+    $ctrl.onChange({ model: $ctrl.model });
+  };
 };
 
 },{}],95:[function(require,module,exports){
@@ -61130,27 +61127,27 @@ angular.module('core', []);
 
 },{}],99:[function(require,module,exports){
 angular.module('core').run(['$templateCache', function ($templateCache) {
-    $templateCache.put('maArticleListItem.component.html', "<div class=\"maArticleListItem-component\">\n  <p>{{$ctrl.name}} works!</p>\n</div>");
+    $templateCache.put('maArticlesList.component.html', "<div class=\"maArticlesList-component\">\r\n  <p>{{$ctrl.name}} works!</p>\r\n</div>");
 }]);
 angular.module('core').run(['$templateCache', function ($templateCache) {
-    $templateCache.put('maArticlesList.component.html', "<div class=\"maArticlesList-component\">\n  <p>{{$ctrl.name}} works!</p>\n</div>");
+    $templateCache.put('maArticleListItem.component.html', "<div class=\"maArticleListItem-component\">\r\n  <p>{{$ctrl.name}} works!</p>\r\n</div>");
 }]);
 
 },{}],100:[function(require,module,exports){
 
 'use strict';
 
-angular.module('core').factory('PostFactory', $http => {
+angular.module('core').factory('CategoryFactory', $http => {
     return {
-        getPosts: function () {
-            return $http.get('/api/posts').then(function (response) {
+        getAll: function () {
+            return $http.get('/api/categories').then(function (response) {
                 return response;
             }).catch(function (error) {
                 return error;
             });
         },
-        addPost: function (post) {
-            return $http.post('/api/posts', post).then(function (response) {
+        add: function (post) {
+            return $http.post('/api/categories', post).then(function (response) {
                 return response;
             }).catch(function (error) {
                 return error;
@@ -61160,6 +61157,29 @@ angular.module('core').factory('PostFactory', $http => {
 });
 
 },{}],101:[function(require,module,exports){
+
+'use strict';
+
+angular.module('core').factory('PostFactory', $http => {
+    return {
+        getAll: function () {
+            return $http.get('/api/posts').then(function (response) {
+                return response;
+            }).catch(function (error) {
+                return error;
+            });
+        },
+        add: function (post) {
+            return $http.post('/api/posts', post).then(function (response) {
+                return response;
+            }).catch(function (error) {
+                return error;
+            });
+        }
+    };
+});
+
+},{}],102:[function(require,module,exports){
 
 'use strict';
 
@@ -61176,7 +61196,7 @@ function maFooterController() {
   };
 };
 
-},{}],102:[function(require,module,exports){
+},{}],103:[function(require,module,exports){
 
 'use strict';
 
@@ -61193,7 +61213,7 @@ function maHeaderController() {
   };
 };
 
-},{}],103:[function(require,module,exports){
+},{}],104:[function(require,module,exports){
 
 'use strict';
 
@@ -61210,7 +61230,7 @@ function maLandingPageController() {
   };
 };
 
-},{}],104:[function(require,module,exports){
+},{}],105:[function(require,module,exports){
 
 'use strict';
 
@@ -61227,7 +61247,7 @@ function maNavbarController() {
   };
 };
 
-},{}],105:[function(require,module,exports){
+},{}],106:[function(require,module,exports){
 
 'use strict';
 
@@ -61249,30 +61269,30 @@ function maSidebarController($location) {
   };
 };
 
-},{}],106:[function(require,module,exports){
+},{}],107:[function(require,module,exports){
 
 'use strict';
 
 angular.module('layout', []);
 
-},{}],107:[function(require,module,exports){
+},{}],108:[function(require,module,exports){
 angular.module('layout').run(['$templateCache', function ($templateCache) {
-    $templateCache.put('maHeader.component.html', "<div class=\"maHeader-component\">\n  <p>{{$ctrl.name}} works!</p>\n</div>");
+    $templateCache.put('maHeader.component.html', "<div class=\"maHeader-component\">\r\n  <p>{{$ctrl.name}} works!</p>\r\n</div>");
 }]);
 angular.module('layout').run(['$templateCache', function ($templateCache) {
-    $templateCache.put('maLandingPage.component.html', "<div class=\"maLandingPage-component\">\n  <h1>\n      Maestris Cambrai\n  </h1>\n</div>\n");
+    $templateCache.put('maFooter.component.html', "<div class=\"maFooter-component\">\r\n    &#9400;2017 | <a href=\"#!/login\">Accès administrateur</a>\r\n</div>\r\n");
 }]);
 angular.module('layout').run(['$templateCache', function ($templateCache) {
-    $templateCache.put('maFooter.component.html', "<div class=\"maFooter-component\">\n    &#9400;2017 | <a href=\"#!/login\">Accès administrateur</a>\n</div>\n");
+    $templateCache.put('maLandingPage.component.html', "<div class=\"maLandingPage-component\">\r\n  <h1>\r\n      Maestris Cambrai\r\n  </h1>\r\n</div>\r\n");
 }]);
 angular.module('layout').run(['$templateCache', function ($templateCache) {
-    $templateCache.put('maSidebar.component.html', "<div class=\"maSidebar-component\">\n  <ul>\n      <li ng-class=\"{'active':$ctrl.activeSection =='dashboard'}\">\n          <a href=\"#!/admin/dashboard\" ng-click=\"$ctrl.activeSection='dashboard'\">Dashboard</a>\n      </li>\n      <li ng-class=\"{'active':$ctrl.activeSection =='articles'}\">\n          <a href=\"#!/admin/articles\" ng-click=\"$ctrl.activeSection='articles'\">Articles</a>\n      </li>\n      <li ng-class=\"{'active':$ctrl.activeSection =='categories'}\">\n          <a href=\"#!/admin/categories\" ng-click=\"$ctrl.activeSection='categories'\">Catégories</a>\n      </li>\n      <li ng-class=\"{'active':$ctrl.activeSection =='commentaires'}\">\n          <a href=\"#!/admin/commentaires\" ng-click=\"$ctrl.activeSection='commentaires'\">Commentaires</a>\n      </li>\n      <li ng-class=\"{'active':$ctrl.activeSection =='images'}\">\n          <a href=\"#!/admin/images\" ng-click=\"$ctrl.activeSection='images'\">Images</a>\n      </li>\n\n      <li class=\"logout\">\n          <a href=\"#!/\" ng-click=\"$ctrl.onLogout()\"><i class=\"fa fa-sign-out\" aria-hidden=\"true\"></i>Deconnexion</a>\n      </li>\n  </ul>\n</div>\n");
+    $templateCache.put('maNavbar.component.html', "<div class=\"maNavbar-component\">\r\n    <ul>\r\n        <li>\r\n            <a href=\"#\">Accueil</a>\r\n        </li>\r\n        <li>\r\n            <a href=\"#\">A propos</a>\r\n        </li>\r\n        <li>\r\n            <a href=\"#\">Articles</a>\r\n        </li>\r\n        <li>\r\n            <a href=\"#\">Archives</a>\r\n        </li>\r\n        <li>\r\n            <a href=\"#\">Contact</a>\r\n        </li>\r\n\r\n    </ul>\r\n</div>\r\n");
 }]);
 angular.module('layout').run(['$templateCache', function ($templateCache) {
-    $templateCache.put('maNavbar.component.html', "<div class=\"maNavbar-component\">\n    <ul>\n        <li>\n            <a href=\"#\">Accueil</a>\n        </li>\n        <li>\n            <a href=\"#\">A propos</a>\n        </li>\n        <li>\n            <a href=\"#\">Articles</a>\n        </li>\n        <li>\n            <a href=\"#\">Archives</a>\n        </li>\n        <li>\n            <a href=\"#\">Contact</a>\n        </li>\n\n    </ul>\n</div>\n");
+    $templateCache.put('maSidebar.component.html', "<div class=\"maSidebar-component\">\r\n  <ul>\r\n      <li ng-class=\"{'active':$ctrl.activeSection =='dashboard'}\">\r\n          <a href=\"#!/admin/dashboard\" ng-click=\"$ctrl.activeSection='dashboard'\">\r\n              <i class=\"fa fa-desktop\" aria-hidden=\"true\"></i>Dashboard\r\n          </a>\r\n      </li>\r\n      <li ng-class=\"{'active':$ctrl.activeSection =='articles'}\">\r\n          <a href=\"#!/admin/articles\" ng-click=\"$ctrl.activeSection='articles'\">\r\n              <i class=\"fa fa-list\" aria-hidden=\"true\"></i>Articles\r\n          </a>\r\n      </li>\r\n      <li ng-class=\"{'active':$ctrl.activeSection =='categories'}\">\r\n          <a href=\"#!/admin/categories\" ng-click=\"$ctrl.activeSection='categories'\">\r\n              <i class=\"fa fa-tags\" aria-hidden=\"true\"></i>Catégories\r\n          </a>\r\n      </li>\r\n      <li ng-class=\"{'active':$ctrl.activeSection =='commentaires'}\">\r\n          <a href=\"#!/admin/commentaires\" ng-click=\"$ctrl.activeSection='commentaires'\">\r\n              <i class=\"fa fa-comment-o\" aria-hidden=\"true\"></i>Commentaires\r\n          </a>\r\n      </li>\r\n      <li ng-class=\"{'active':$ctrl.activeSection =='images'}\">\r\n          <a href=\"#!/admin/images\" ng-click=\"$ctrl.activeSection='images'\">\r\n              <i class=\"fa fa-picture-o\" aria-hidden=\"true\"></i>Images\r\n          </a>\r\n      </li>\r\n\r\n      <li class=\"logout\">\r\n          <a href=\"#!/\" ng-click=\"$ctrl.onLogout()\"><i class=\"fa fa-sign-out\" aria-hidden=\"true\"></i>Deconnexion</a>\r\n      </li>\r\n  </ul>\r\n</div>\r\n");
 }]);
 
-},{}],108:[function(require,module,exports){
+},{}],109:[function(require,module,exports){
 
 'use strict';
 
@@ -61289,7 +61309,7 @@ function maAdminCategoriesController() {
   };
 };
 
-},{}],109:[function(require,module,exports){
+},{}],110:[function(require,module,exports){
 
 'use strict';
 
@@ -61306,7 +61326,7 @@ function maAdminCommentsController() {
   };
 };
 
-},{}],110:[function(require,module,exports){
+},{}],111:[function(require,module,exports){
 
 'use strict';
 
@@ -61323,7 +61343,7 @@ function maAdminDashboardController() {
   };
 };
 
-},{}],111:[function(require,module,exports){
+},{}],112:[function(require,module,exports){
 
 'use strict';
 
@@ -61340,7 +61360,7 @@ function maAdminImagesController() {
   };
 };
 
-},{}],112:[function(require,module,exports){
+},{}],113:[function(require,module,exports){
 
 'use strict';
 
@@ -61349,18 +61369,27 @@ angular.module('routes').component('maAdminPosts', {
     controller: maAdminPostsController
 });
 
-function maAdminPostsController(PostFactory) {
+function maAdminPostsController(PostFactory, CategoryFactory) {
     let $ctrl = this;
 
     $ctrl.$onInit = function () {
         $ctrl.name = "maAdminPosts";
         $ctrl.newPost = {};
         $ctrl.getPosts();
+        $ctrl.getCategories();
     };
 
     $ctrl.getPosts = function () {
-        PostFactory.getPosts().then(function (response) {
+        PostFactory.getAll().then(function (response) {
             $ctrl.posts = response.data;
+        }).catch(function (error) {
+            console.log(error);
+        });
+    };
+
+    $ctrl.getCategories = function () {
+        CategoryFactory.getAll().then(function (response) {
+            $ctrl.categories = response.data;
         }).catch(function (error) {
             console.log(error);
         });
@@ -61371,15 +61400,17 @@ function maAdminPostsController(PostFactory) {
     };
 
     $ctrl.addPost = function () {
-        PostFactory.addPost($ctrl.newPost).then(function (response) {
-            console.log(response);
+        PostFactory.add($ctrl.newPost).then(function (response) {
+            $scope.getPosts();
+            alert('Article ajouté avec succès');
+            $scope.newPost = {};
         }).catch(function (error) {
-            console.log(error);
+            alert("erreur lors de l'ajout de l'article");
         });
     };
 };
 
-},{}],113:[function(require,module,exports){
+},{}],114:[function(require,module,exports){
 
 'use strict';
 
@@ -61407,7 +61438,7 @@ function maControlPanelController(AuthFactory, $state) {
     };
 };
 
-},{}],114:[function(require,module,exports){
+},{}],115:[function(require,module,exports){
 
 'use strict';
 
@@ -61424,7 +61455,7 @@ function maHomeController() {
   };
 };
 
-},{}],115:[function(require,module,exports){
+},{}],116:[function(require,module,exports){
 
 'use strict';
 
@@ -61458,36 +61489,36 @@ function maLoginController(AuthFactory, $state) {
     };
 };
 
-},{}],116:[function(require,module,exports){
+},{}],117:[function(require,module,exports){
 
 'use strict';
 
 angular.module('routes', []);
 
-},{}],117:[function(require,module,exports){
+},{}],118:[function(require,module,exports){
 angular.module('routes').run(['$templateCache', function ($templateCache) {
-    $templateCache.put('maAdminComments.component.html', "<div class=\"maAdminComments-component\">\n    <h1>Commentaires</h1>\n</div>\n");
+    $templateCache.put('maAdminCategories.component.html', "<div class=\"maAdminCategories-component\">\r\n  <p>{{$ctrl.name}} works!</p>\r\n</div>");
 }]);
 angular.module('routes').run(['$templateCache', function ($templateCache) {
-    $templateCache.put('maAdminCategories.component.html', "<div class=\"maAdminCategories-component\">\n  <p>{{$ctrl.name}} works!</p>\n</div>");
+    $templateCache.put('maAdminDashboard.component.html', "<div class=\"maAdminDashboard-component\">\r\n    <div>Vous avez X nouveaux commentaires</div>\r\n    <div>Vous avez X nouveaux messages</div>\r\n    <div>Total articles</div>\r\n    <div>Total commentaires</div>\r\n    <div>Total messages</div>\r\n\r\n    <div>Dernier article :</div>\r\n</div>\r\n");
 }]);
 angular.module('routes').run(['$templateCache', function ($templateCache) {
-    $templateCache.put('maAdminDashboard.component.html', "<div class=\"maAdminDashboard-component\">\n    <div>Vous avez X nouveaux commentaires</div>\n    <div>Vous avez X nouveaux messages</div>\n    <div>Total articles</div>\n    <div>Total commentaires</div>\n    <div>Total messages</div>\n\n    <div>Dernier article :</div>\n</div>\n");
+    $templateCache.put('maAdminComments.component.html', "<div class=\"maAdminComments-component\">\r\n    <h1>Commentaires</h1>\r\n</div>\r\n");
 }]);
 angular.module('routes').run(['$templateCache', function ($templateCache) {
-    $templateCache.put('maAdminImages.component.html', "<div class=\"maAdminImages-component\">\n  <p>{{$ctrl.name}} works!</p>\n</div>");
+    $templateCache.put('maAdminImages.component.html', "<div class=\"maAdminImages-component\">\r\n  <p>{{$ctrl.name}} works!</p>\r\n</div>");
 }]);
 angular.module('routes').run(['$templateCache', function ($templateCache) {
-    $templateCache.put('maAdminPosts.component.html', "<div class=\"maAdminPosts-component\">\n    <h2>Vos articles</h2>\n    <ma-post-table posts=\"$ctrl.posts\"></ma-post-table>\n    <h2>Nouvel article</h2>\n    <form ng-submit=\"$ctrl.addPost()\">\n        <div class=\"form-control\">\n            <input type=\"test\" ng-model=\"$ctrl.newPost.title\" placeholder=\"Titre de votre article\"/>\n        </div>\n        <div class=\"form-control\">\n            <input type=\"test\" ng-model=\"$ctrl.newPost.summary\" placeholder=\"En-tête de votre article\"/>\n        </div>\n        <div class=\"form-control\">\n            <ma-text-editor model=\"$ctrl.newPost.body\" on-change=\"$ctrl.changeBody(model)\"></ma-text-editor>\n        </div>\n        <div class=\"form-control\">\n            <input type=\"submit\" value=\"Publier l'article\"/>\n        </div>\n    </form>\n</div>\n");
+    $templateCache.put('maAdminPosts.component.html', "<div class=\"maAdminPosts-component\">\r\n    <h2>Vos articles</h2>\r\n    <ma-post-table posts=\"$ctrl.posts\"></ma-post-table>\r\n    <h2>Nouvel article</h2>\r\n    <form ng-submit=\"$ctrl.addPost()\">\r\n        <div class=\"form-control\">\r\n            <input type=\"test\" ng-model=\"$ctrl.newPost.title\" placeholder=\"Titre de votre article\"/>\r\n        </div>\r\n        <div class=\"form-control\">\r\n            <select ng-model=\"$ctrl.newPost.category_id\" ng-options=\"category.id as category.name for category in $ctrl.categories track by category.name\">\r\n                <option value=\"\" disabled>- Choisissez une catégorie -</option>\r\n            </select>\r\n        </div>\r\n        <div class=\"form-control\">\r\n            <input type=\"test\" ng-model=\"$ctrl.newPost.summary\" placeholder=\"En-tête de votre article\"/>\r\n        </div>\r\n        <div class=\"form-control\">\r\n            <ma-text-editor model=\"$ctrl.newPost.body\" on-change=\"$ctrl.changeBody(model)\"></ma-text-editor>\r\n        </div>\r\n        <div class=\"form-control\">\r\n            <input type=\"submit\" value=\"Publier l'article\"/>\r\n        </div>\r\n    </form>\r\n</div>\r\n");
 }]);
 angular.module('routes').run(['$templateCache', function ($templateCache) {
-    $templateCache.put('maControlPanel.component.html', "<div class=\"maControlPanel-component\">\n    <div class=\"col-left\">\n        <ma-sidebar on-logout=\"$ctrl.logout()\"></ma-sidebar>\n    </div>\n    <div class=\"col-right\">\n        <ui-view></ui-view>\n    </div>\n</div>\n");
+    $templateCache.put('maControlPanel.component.html', "<div class=\"maControlPanel-component\">\r\n    <header>\r\n        <h1>Panneau Admin<span><a href=\"#!/\">Retour au site</a></span></h1>\r\n    </header>\r\n    <main>\r\n        <div class=\"col-left\">\r\n            <ma-sidebar on-logout=\"$ctrl.logout()\"></ma-sidebar>\r\n        </div>\r\n        <div class=\"col-right\">\r\n            <ui-view></ui-view>\r\n        </div>\r\n    </main>\r\n</div>\r\n");
 }]);
 angular.module('routes').run(['$templateCache', function ($templateCache) {
-    $templateCache.put('maHome.component.html', "<div class=\"maHome-component\">\n  <ma-navbar></ma-navbar>\n  <ma-landing-page></ma-landing-page>\n  <ma-articles-list></ma-articles-list>\n  <ma-footer></ma-footer>\n</div>\n");
+    $templateCache.put('maLogin.component.html', "<div class=\"maLogin-component\">\r\n    <ma-login-form credentials='$ctrl.credentials' on-login=\"$ctrl.login()\" failed=\"$ctrl.failed\"></ma-login-form>\r\n</div>\r\n");
 }]);
 angular.module('routes').run(['$templateCache', function ($templateCache) {
-    $templateCache.put('maLogin.component.html', "<div class=\"maLogin-component\">\n    <ma-login-form credentials='$ctrl.credentials' on-login=\"$ctrl.login()\" failed=\"$ctrl.failed\"></ma-login-form>\n</div>\n");
+    $templateCache.put('maHome.component.html', "<div class=\"maHome-component\">\r\n  <ma-navbar></ma-navbar>\r\n  <ma-landing-page></ma-landing-page>\r\n  <ma-articles-list></ma-articles-list>\r\n  <ma-footer></ma-footer>\r\n</div>\r\n");
 }]);
 
 },{}]},{},[86])

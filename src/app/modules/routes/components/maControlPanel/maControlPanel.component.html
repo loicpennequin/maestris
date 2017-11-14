@@ -1,8 +1,13 @@
 <div class="maControlPanel-component">
-    <div class="col-left">
-        <ma-sidebar on-logout="$ctrl.logout()"></ma-sidebar>
-    </div>
-    <div class="col-right">
-        <ui-view></ui-view>
-    </div>
+    <header>
+        <h1>Panneau Admin<span><a href="#!/">Retour au site</a></span></h1>
+    </header>
+    <main>
+        <div class="col-left">
+            <ma-sidebar on-logout="$ctrl.logout()"></ma-sidebar>
+        </div>
+        <div class="col-right">
+            <ui-view></ui-view>
+        </div>
+    </main>
 </div>

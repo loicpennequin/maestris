@@ -12,8 +12,12 @@
     h1
         padding-left: 15%
         width: 100%
-        font-family: $font-text
+        font-family: $font-thin
         font-size: 4em
+        font-weight: normal
         background: linear-gradient(to right, transparent, transparentize($pink,0.3), transparent)
         text-shadow: 0 0 10px $dark, 10px 5px 2px $black
         mix-blend-mode: lighten
+        &::first-letter
+            font-size: 2.5em
+            color: $pink

@@ -1,12 +1,31 @@
 .maControlPanel-component
-    display: flex
-    background: $white
+    header
+        position: relative
+        top: 0
+        left: 0
+        width: 100%
+        z-index: 9999
+        background: linear-gradient(to right, $pink, $dark)
+        color: $white
+        width: 100%
+        padding: 10px 50px
+        span
+            float: right
+            color: $blue
+            font-family: $font-title
+            font-size: 0.6em
+
+    main
+        display: flex
+        background: $white
 
     .col-left
-        width: 18vw
+        width: 12vw
+        max-width: 300px
         min-height: 100vh
     .col-right
-        width: 82vw
+        width: 88vw
+        // max-width: 1200px
         min-height: 100vh
         padding: 15px 15px
 
@@ -32,6 +51,12 @@
                     cursor: pointer
                     float: right
                     +btn-pink
+            select
+                padding: 5px
+                border-radius: 6px
+                min-width: 120px
+                option
+                    font-family: $font-title
 
             .maTextEditor-component
                 margin-top: 25px
@@ -49,6 +74,12 @@
             background: $dark
             color: $white
 
+        tbody
+            tr
+                background: $white
+                &:hover
+                    background: darken($white, 15%)
+
         th, td
             padding: 5px 10px
 
@@ -56,14 +87,22 @@
             border: solid $black 1px
         td
             border: solid darken($white, 15%) 1px
+
             button
                 padding: 5px
                 border-radius: 4px
                 color: white
                 font-weight: 700
+                margin-right: 5px
             button:nth-of-type(1)
                 background: $pink
+                &:hover
+                    background: darken($pink, 10%)
             button:nth-of-type(2)
                 background: $blue
+                &:hover
+                    background: darken($blue, 10%)
             button:nth-of-type(3)
                 background: $red
+                &:hover
+                    background: darken($red, 10%)

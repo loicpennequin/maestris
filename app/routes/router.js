@@ -6,6 +6,7 @@ const express = require('express');
     Models & Services
     ============================================================================= */
 const postModel = require('../models/postModel.js')
+const categoryModel = require('../models/categoryModel.js')
 
 const authService = require('../services/authService.js')
 
@@ -20,4 +21,7 @@ module.exports = function(app){
 
   app.get('/api/posts', postModel.getAll);
   app.post('/api/posts', postModel.add);
+
+  app.get('/api/categories', categoryModel.getAll);
+  app.post('/api/categories', categoryModel.add);
 };

@@ -1,19 +1,29 @@
 <div class="maSidebar-component">
   <ul>
       <li ng-class="{'active':$ctrl.activeSection =='dashboard'}">
-          <a href="#!/admin/dashboard" ng-click="$ctrl.activeSection='dashboard'">Dashboard</a>
+          <a href="#!/admin/dashboard" ng-click="$ctrl.activeSection='dashboard'">
+              <i class="fa fa-desktop" aria-hidden="true"></i>Dashboard
+          </a>
       </li>
       <li ng-class="{'active':$ctrl.activeSection =='articles'}">
-          <a href="#!/admin/articles" ng-click="$ctrl.activeSection='articles'">Articles</a>
+          <a href="#!/admin/articles" ng-click="$ctrl.activeSection='articles'">
+              <i class="fa fa-list" aria-hidden="true"></i>Articles
+          </a>
       </li>
       <li ng-class="{'active':$ctrl.activeSection =='categories'}">
-          <a href="#!/admin/categories" ng-click="$ctrl.activeSection='categories'">Catégories</a>
+          <a href="#!/admin/categories" ng-click="$ctrl.activeSection='categories'">
+              <i class="fa fa-tags" aria-hidden="true"></i>Catégories
+          </a>
       </li>
       <li ng-class="{'active':$ctrl.activeSection =='commentaires'}">
-          <a href="#!/admin/commentaires" ng-click="$ctrl.activeSection='commentaires'">Commentaires</a>
+          <a href="#!/admin/commentaires" ng-click="$ctrl.activeSection='commentaires'">
+              <i class="fa fa-comment-o" aria-hidden="true"></i>Commentaires
+          </a>
       </li>
       <li ng-class="{'active':$ctrl.activeSection =='images'}">
-          <a href="#!/admin/images" ng-click="$ctrl.activeSection='images'">Images</a>
+          <a href="#!/admin/images" ng-click="$ctrl.activeSection='images'">
+              <i class="fa fa-picture-o" aria-hidden="true"></i>Images
+          </a>
       </li>
 
       <li class="logout">

@@ -24,6 +24,7 @@ require('./modules/admin/components/maPostTable/maPostTable.component.js')
 require('./modules/admin/components/maTextEditor/maTextEditor.component.js')
 require('./modules/admin/components/maLoginForm/maLoginForm.component.js')
 require('./modules/core/core.js');
+require('./modules/core/services/CategoryFactory.js')
 require('./modules/core/services/PostFactory.js')
 require('./modules/core/core.templates.js');
 require('./modules/core/components/maArticleListItem/maArticleListItem.component.js')

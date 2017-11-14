@@ -11,8 +11,4 @@ angular.module('admin')
 
 function maPostTableController(){
   let $ctrl = this;
-
-  $ctrl.$onInit = function(){
-    console.log($ctrl);
-  };
 };
