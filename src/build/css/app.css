@@ -38,23 +38,76 @@ input:focus, button:focus, select:focus, textarea:focus {
   height: 100vh;
   background: -webkit-gradient(linear, left top, left bottom, from(130DEG), color-stop(#272537), to(#0a0a0a));
   background: linear-gradient(130DEG, #272537, #0a0a0a);
-  color: #f2f2f2; }
+  color: #f7f7f7; }
 
-.maControlPanel-component .col-left {
-  width: 18vw;
-  float: left;
-  min-height: 100vh; }
-
-.maControlPanel-component .col-right {
-  width: 82vw;
-  float: left;
-  min-height: 100vh;
-  padding: 15px; }
+.maControlPanel-component {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  background: #f7f7f7; }
+  .maControlPanel-component .col-left {
+    width: 18vw;
+    min-height: 100vh; }
+  .maControlPanel-component .col-right {
+    width: 82vw;
+    min-height: 100vh;
+    padding: 15px 15px; }
+  .maControlPanel-component form {
+    width: 100;
+    margin: 0 auto; }
+    .maControlPanel-component form .form-control {
+      margin: 10px 0; }
+      .maControlPanel-component form .form-control input {
+        width: 50vw;
+        padding: 5px;
+        font-size: 1.2em; }
+        .maControlPanel-component form .form-control input[type="submit"] {
+          width: auto;
+          padding: 10px;
+          border-radius: 6px;
+          color: #f7f7f7;
+          font-family: "Open Sans", Arial, Helvetica, sans-serif;
+          font-weight: 700;
+          cursor: pointer;
+          float: right;
+          background: -webkit-gradient(linear, left top, left bottom, from(#d52aa2), to(#aa2281));
+          background: linear-gradient(#d52aa2, #aa2281); }
+          .maControlPanel-component form .form-control input[type="submit"]:hover {
+            background: -webkit-gradient(linear, left top, left bottom, from(#e84ab8), to(#d52aa2));
+            background: linear-gradient(#e84ab8, #d52aa2); }
+      .maControlPanel-component form .form-control .maTextEditor-component {
+        margin-top: 25px; }
+  .maControlPanel-component table {
+    width: 100%;
+    text-align: left;
+    font-family: "Open Sans", Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    margin: 10px auto 20px; }
+    .maControlPanel-component table thead {
+      background: #272537;
+      color: #f7f7f7; }
+    .maControlPanel-component table th, .maControlPanel-component table td {
+      padding: 5px 10px; }
+    .maControlPanel-component table th {
+      border: solid #0a0a0a 1px; }
+    .maControlPanel-component table td {
+      border: solid #d1d1d1 1px; }
+      .maControlPanel-component table td button {
+        padding: 5px;
+        border-radius: 4px;
+        color: white;
+        font-weight: 700; }
+      .maControlPanel-component table td button:nth-of-type(1) {
+        background: #d52aa2; }
+      .maControlPanel-component table td button:nth-of-type(2) {
+        background: #6c7fe0; }
+      .maControlPanel-component table td button:nth-of-type(3) {
+        background: #db708b; }
 
 .maNavbar-component {
   background: #272537;
-  color: #f2f2f2;
-  border-bottom: solid 1px #f2f2f2;
+  color: #f7f7f7;
+  border-bottom: solid 1px #f7f7f7;
   position: fixed;
   top: 0;
   width: 100%; }
@@ -69,8 +122,8 @@ input:focus, button:focus, select:focus, textarea:focus {
       font-family: "Open Sans", Arial, Helvetica, sans-serif;
       font-weight: 700;
       font-size: 1.2em;
-      -webkit-transition: all 0.5s;
-      transition: all 0.5s;
+      -webkit-transition: all 0.3s;
+      transition: all 0.3s;
       position: relative; }
       .maNavbar-component ul li::after {
         content: "";
@@ -80,13 +133,11 @@ input:focus, button:focus, select:focus, textarea:focus {
         height: 2px;
         width: 0;
         background: #d52aa2;
-        -webkit-transition: all 0.5s;
-        transition: all 0.5s; }
+        -webkit-transition: all 0.3s;
+        transition: all 0.3s; }
       .maNavbar-component ul li:hover::after {
         left: 10%;
-        width: 80%;
-        -webkit-box-shadow: 0 0 0 1px #f2f2f2;
-                box-shadow: 0 0 0 1px #f2f2f2; }
+        width: 80%; }
 
 .maLandingPage-component {
   height: 65vh;
@@ -94,14 +145,16 @@ input:focus, button:focus, select:focus, textarea:focus {
   background-size: cover;
   background-position-x: center;
   background-position-y: 20%;
-  background-position: fixed;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
-  color: #f2f2f2; }
+  color: #f7f7f7; }
+  @media screen and (max-width: 768px) {
+    .maLandingPage-component {
+      background-position-x: 500px; } }
   .maLandingPage-component h1 {
     padding-left: 15%;
     width: 100%;
@@ -121,7 +174,7 @@ input:focus, button:focus, select:focus, textarea:focus {
     width: 18vw;
     height: 100vh;
     background: #272537;
-    padding: 10vh 0;
+    padding: 12vh 0;
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
@@ -129,37 +182,51 @@ input:focus, button:focus, select:focus, textarea:focus {
     -webkit-box-direction: normal;
         -ms-flex-direction: column;
             flex-direction: column;
-    -webkit-box-pack: center;
-        -ms-flex-pack: center;
-            justify-content: center;
-    color: #f2f2f2;
+    -ms-flex-pack: distribute;
+        justify-content: space-around;
+    color: #f7f7f7;
     height: 100%; }
     .maSidebar-component ul li {
-      padding: 25px 30px;
-      text-align: center;
+      padding: 15px 30px;
       font-family: "Open Sans", Arial, Helvetica, sans-serif;
-      font-size: 1.1em; }
+      font-size: 1.1em;
+      position: relative; }
       .maSidebar-component ul li:hover {
-        background: #d52aa2; }
+        color: #d52aa2; }
       .maSidebar-component ul li.logout {
-        background: -webkit-gradient(linear, left top, left bottom, from(#d52aa2), to(#c02692));
-        background: linear-gradient(#d52aa2, #c02692);
         font-size: 1.2em; }
-        .maSidebar-component ul li.logout:hover {
-          background: -webkit-gradient(linear, left top, left bottom, from(#d93fab), to(#d52aa2));
-          background: linear-gradient(#d93fab, #d52aa2); }
+      .maSidebar-component ul li.active::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 5px;
+        height: 100%;
+        background: #d52aa2; }
+      .maSidebar-component ul li.active::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        right: 0;
+        width: 0;
+        height: 0;
+        border-top: solid transparent 15px;
+        border-bottom: solid transparent 15px;
+        border-right: solid 15px #f7f7f7;
+        -webkit-transform: translateY(-50%);
+                transform: translateY(-50%); }
 
 .maLoginForm-component h1 {
   background: #d52aa2;
   border-top-left-radius: 6px;
   border-top-right-radius: 6px;
-  padding: 10px 15px;
+  padding: 10px 45px;
   text-align: center;
   border: solid 2px #e67fc7;
   border-bottom-color: transparent; }
 
 .maLoginForm-component form {
-  background: #f2f2f2;
+  background: #f7f7f7;
   padding: 10px;
   border-bottom-left-radius: 6px;
   border-bottom-right-radius: 6px;
@@ -176,15 +243,15 @@ input:focus, button:focus, select:focus, textarea:focus {
     font-size: 1.1em;
     margin-bottom: 5px; }
   .maLoginForm-component .form-control button {
-    background: -webkit-gradient(linear, left top, left bottom, from(#d52aa2), to(#aa2281));
-    background: linear-gradient(#d52aa2, #aa2281);
-    color: #f2f2f2;
+    color: #f7f7f7;
     padding: 10px;
     font-family: "Open Sans", Arial, Helvetica, sans-serif;
     font-weight: 700;
     margin-top: 5px;
     border-radius: 6px;
-    cursor: pointer; }
+    cursor: pointer;
+    background: -webkit-gradient(linear, left top, left bottom, from(#d52aa2), to(#aa2281));
+    background: linear-gradient(#d52aa2, #aa2281); }
     .maLoginForm-component .form-control button:hover {
       background: -webkit-gradient(linear, left top, left bottom, from(#e84ab8), to(#d52aa2));
       background: linear-gradient(#e84ab8, #d52aa2); }

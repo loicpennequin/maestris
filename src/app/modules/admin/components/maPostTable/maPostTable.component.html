@@ -1,0 +1,26 @@
+<div class="maPostTable-component">
+    <table>
+        <thead>
+            <tr>
+                <th>Titre</th>
+                <th>Categorie</th>
+                <th>Date de publication</th>
+                <th>Commentaires</th>
+                <th>Options</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="post in $ctrl.posts">
+                <td>{{post.title}}</td>
+                <td>{{post.category_name}}</td>
+                <td>{{post.created_at | date : 'EEE d MMM yyyy'}}</td>
+                <td>Soon</td>
+                <td>
+                    <button>Voir</button>
+                    <button>Editer</button>
+                    <button>Supprimer</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

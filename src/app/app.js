@@ -1,1 +1,1 @@
-angular.module('maestris', ['admin', 'routes', 'layout', 'core', 'ui.router', 'ngMessages', 'ngAnimate', 'ngCookies', 'ngResource']);
+angular.module('maestris', ['admin', 'routes', 'layout', 'core', 'ui.tinymce', 'ui.router', 'ngMessages', 'ngAnimate', 'ngCookies', 'ngResource']);

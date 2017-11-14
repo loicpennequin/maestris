@@ -2,7 +2,7 @@
 //colors
 $black : hsla(0, 0%, 4%, 1)
 $dark : hsla(249, 20%, 18%, 1)
-$white: hsla(0, 0%, 95%, 1)
+$white: hsla(0, 0%, 97%, 1)
 $pink: hsla(318, 67%, 50%, 1)
 $blue: hsla(230, 65%, 65%, 1)
 $red: hsla(345, 60%, 65%, 1)
@@ -11,6 +11,13 @@ $red: hsla(345, 60%, 65%, 1)
 $font-title: 'Open Sans', Arial, Helvetica,  sans-serif
 $font-text: 'Fenix', Georgia, serif
 $font-cursive : 'Pacifico', cursive
+
+//===========MIXINS==============//
+
+=btn-pink
+    background: linear-gradient($pink, darken($pink, 10%))
+    &:hover
+        background: linear-gradient(saturate(lighten($pink, 10%), 10%), $pink)
 
 //===========RESET==============//
 *

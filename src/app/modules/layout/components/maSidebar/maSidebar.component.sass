@@ -7,21 +7,39 @@
         width: 18vw
         height: 100vh
         background: $dark
-        padding: 10vh 0
+        padding: 12vh 0
         display: flex
         flex-direction: column
-        justify-content: center
+        justify-content: space-around
         color: $white
         height: 100%
         li
-            padding: 25px 30px
-            text-align: center
+            padding: 15px 30px
             font-family: $font-title
             font-size: 1.1em
+            position: relative
             &:hover
-                background: $pink
+                color: $pink
             &.logout
-                background: linear-gradient($pink, darken($pink, 5%))
                 font-size: 1.2em
-                &:hover
-                    background: linear-gradient(lighten($pink, 5%), $pink)
+
+            &.active
+                &::before
+                    content: ""
+                    position: absolute
+                    top: 0
+                    left: 0
+                    width: 5px
+                    height: 100%
+                    background: $pink
+                &::after
+                    content: ""
+                    position: absolute
+                    top: 50%
+                    right: 0
+                    width: 0
+                    height: 0
+                    border-top: solid transparent 15px
+                    border-bottom: solid transparent 15px
+                    border-right: solid 15px $white
+                    transform: translateY(-50%)

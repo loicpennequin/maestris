@@ -1,10 +1,69 @@
 .maControlPanel-component
+    display: flex
+    background: $white
+
     .col-left
         width: 18vw
-        float: left
         min-height: 100vh
     .col-right
         width: 82vw
-        float: left
         min-height: 100vh
-        padding: 15px
+        padding: 15px 15px
+
+    //forms
+    form
+        width: 100
+        margin: 0 auto
+
+        .form-control
+            margin: 10px 0
+
+            input
+                width: 50vw
+                padding: 5px
+                font-size: 1.2em
+                &[type="submit"]
+                    width: auto
+                    padding: 10px
+                    border-radius: 6px
+                    color: $white
+                    font-family: $font-title
+                    font-weight: 700
+                    cursor: pointer
+                    float: right
+                    +btn-pink
+
+            .maTextEditor-component
+                margin-top: 25px
+
+
+    //tables
+    table
+        width: 100%
+        text-align: left
+        font-family: $font-title
+        border-collapse: collapse
+        margin: 10px auto 20px
+
+        thead
+            background: $dark
+            color: $white
+
+        th, td
+            padding: 5px 10px
+
+        th
+            border: solid $black 1px
+        td
+            border: solid darken($white, 15%) 1px
+            button
+                padding: 5px
+                border-radius: 4px
+                color: white
+                font-weight: 700
+            button:nth-of-type(1)
+                background: $pink
+            button:nth-of-type(2)
+                background: $blue
+            button:nth-of-type(3)
+                background: $red

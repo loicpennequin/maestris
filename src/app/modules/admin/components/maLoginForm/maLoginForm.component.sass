@@ -3,7 +3,7 @@
         background: $pink
         border-top-left-radius: 6px
         border-top-right-radius: 6px
-        padding: 10px 15px
+        padding: 10px 45px
         text-align: center
         border: solid 2px lighten($pink, 20%)
         border-bottom-color: transparent
@@ -27,7 +27,6 @@
             margin-bottom: 5px
 
         button
-            background: linear-gradient($pink, darken($pink, 10%))
             color: $white
             padding: 10px
             font-family: $font-title
@@ -35,8 +34,8 @@
             margin-top: 5px
             border-radius: 6px
             cursor: pointer
-            &:hover
-                background: linear-gradient(saturate(lighten($pink, 10%), 10%), $pink)
+            +btn-pink
+
 
     a
         color: $blue

@@ -1,3 +1,18 @@
 {
-  "ignore": ["client/*"]
+    "env": {
+        "NODE_ENV": "Development",
+        "PORT": 8000
+    },
+    "ext": "js",
+    "ignore": [
+        ".git/",
+        "node_modules/",
+        "client/"
+    ],
+    "restartable": "rs",
+    "verbose": false,
+    "watch": [
+        "server.js",
+        "app/"
+    ]
 }

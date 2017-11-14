@@ -5,7 +5,7 @@ const express = require('express');
 /*  =============================================================================
     Models & Services
     ============================================================================= */
-const userModel = require('../models/userModel.js');
+const postModel = require('../models/postModel.js')
 
 const authService = require('../services/authService.js')
 
@@ -17,4 +17,7 @@ module.exports = function(app){
   app.post('/api/auth/login', authService.authenticate);
   app.get('/api/auth/isloggedin', authService.isLoggedIn);
   app.get('/api/auth/logout', authService.logout);
+
+  app.get('/api/posts', postModel.getAll);
+  app.post('/api/posts', postModel.add);
 };

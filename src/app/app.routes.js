@@ -1,7 +1,6 @@
 angular.module('maestris')
   .config(function($stateProvider, $urlRouterProvider, $locationProvider){
     $urlRouterProvider.otherwise("/");
-    $locationProvider.html5Mode(true);
     $stateProvider
       .state('home', {
         url: "/",
@@ -18,5 +17,21 @@ angular.module('maestris')
       .state('admin.dashboard', {
           url: '/dashboard',
           component: 'maAdminDashboard'
+      })
+      .state('admin.posts', {
+          url: '/articles',
+          component: 'maAdminPosts'
+      })
+      .state('admin.categories', {
+          url: '/categories',
+          component: 'maAdminCategories'
+      })
+      .state('admin.comments', {
+          url: '/commentaires',
+          component: 'maAdminComments'
+      })
+      .state('admin.images', {
+          url: '/images',
+          component: 'maAdminImages'
       })
   });

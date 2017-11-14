@@ -19,9 +19,7 @@ function maControlPanelController(AuthFactory, $state){
         })
   }
   $ctrl.logout = function(){
-      console.log('recieved the call from sidebar');
       AuthFactory.logout().then(function(response){
-          console.log('logged out');
           $state.go('home')
       })
       .catch(function(error){

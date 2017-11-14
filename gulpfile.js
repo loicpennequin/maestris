@@ -111,7 +111,6 @@ gulp.task('watch', () => {
 
 // Run Express server
 gulp.task('serve', function () {
-    let called = false;
     return nodemon({
       script: 'server.js',
       ignore: [
@@ -119,10 +118,6 @@ gulp.task('serve', function () {
               './git',
               './gulpfile.js'
           ]
-      })
-      .on('start', function onStart() {
-        if (!called) { cb(); }
-        called = true;
       })
 });
 

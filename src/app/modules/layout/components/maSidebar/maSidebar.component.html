@@ -1,20 +1,23 @@
 <div class="maSidebar-component">
   <ul>
-      <li>
-          <a href="#">Dashboard</a>
+      <li ng-class="{'active':$ctrl.activeSection =='dashboard'}">
+          <a href="#!/admin/dashboard" ng-click="$ctrl.activeSection='dashboard'">Dashboard</a>
       </li>
-      <li>
-          <a href="#">Articles</a>
+      <li ng-class="{'active':$ctrl.activeSection =='articles'}">
+          <a href="#!/admin/articles" ng-click="$ctrl.activeSection='articles'">Articles</a>
       </li>
-      <li>
-          <a href="#">Commentaires</a>
+      <li ng-class="{'active':$ctrl.activeSection =='categories'}">
+          <a href="#!/admin/categories" ng-click="$ctrl.activeSection='categories'">Catégories</a>
       </li>
-      <li>
-          <a href="#">Images</a>
+      <li ng-class="{'active':$ctrl.activeSection =='commentaires'}">
+          <a href="#!/admin/commentaires" ng-click="$ctrl.activeSection='commentaires'">Commentaires</a>
+      </li>
+      <li ng-class="{'active':$ctrl.activeSection =='images'}">
+          <a href="#!/admin/images" ng-click="$ctrl.activeSection='images'">Images</a>
       </li>
 
       <li class="logout">
-          <a href="/" ng-click="$ctrl.onLogout()"><i class="fa fa-sign-out" aria-hidden="true"></i>Deconnexion</a>
+          <a href="#!/" ng-click="$ctrl.onLogout()"><i class="fa fa-sign-out" aria-hidden="true"></i>Deconnexion</a>
       </li>
   </ul>
 </div>

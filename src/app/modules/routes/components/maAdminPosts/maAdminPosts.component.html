@@ -1,0 +1,19 @@
+<div class="maAdminPosts-component">
+    <h2>Vos articles</h2>
+    <ma-post-table posts="$ctrl.posts"></ma-post-table>
+    <h2>Nouvel article</h2>
+    <form ng-submit="$ctrl.addPost()">
+        <div class="form-control">
+            <input type="test" ng-model="$ctrl.newPost.title" placeholder="Titre de votre article"/>
+        </div>
+        <div class="form-control">
+            <input type="test" ng-model="$ctrl.newPost.summary" placeholder="En-tête de votre article"/>
+        </div>
+        <div class="form-control">
+            <ma-text-editor model="$ctrl.newPost.body" on-change="$ctrl.changeBody(model)"></ma-text-editor>
+        </div>
+        <div class="form-control">
+            <input type="submit" value="Publier l'article"/>
+        </div>
+    </form>
+</div>

@@ -9,6 +9,12 @@ angular.module('layout')
     controller : maSidebarController,
   })
 
-function maSidebarController(){
+function maSidebarController($location){
   let $ctrl = this;
+
+  $ctrl.activeSection;
+
+  $ctrl.$onInit= function(){
+      $ctrl.activeSection = $location.path().substr(7);
+  }
 };

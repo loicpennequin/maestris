@@ -2014,7 +2014,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
 })));
 
 
-},{"@uirouter/core":22,"angular":83}],2:[function(require,module,exports){
+},{"@uirouter/core":22,"angular":84}],2:[function(require,module,exports){
 (function (global){
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
@@ -16503,6 +16503,243 @@ require('./angular-resource');
 module.exports = 'ngResource';
 
 },{"./angular-resource":80}],82:[function(require,module,exports){
+/**
+ * Binds a TinyMCE widget to <textarea> elements.
+ */
+angular.module('ui.tinymce', [])
+  .value('uiTinymceConfig', {})
+  .directive('uiTinymce', ['$rootScope', '$compile', '$timeout', '$window', '$sce', 'uiTinymceConfig', 'uiTinymceService', function($rootScope, $compile, $timeout, $window, $sce, uiTinymceConfig, uiTinymceService) {
+    uiTinymceConfig = uiTinymceConfig || {};
+
+    if (uiTinymceConfig.baseUrl) {
+      tinymce.baseURL = uiTinymceConfig.baseUrl;
+    }
+
+    return {
+      require: ['ngModel', '^?form'],
+      priority: 599,
+      link: function(scope, element, attrs, ctrls) {
+        if (!$window.tinymce) {
+          return;
+        }
+
+        var ngModel = ctrls[0],
+          form = ctrls[1] || null;
+
+        var expression, options = {
+          debounce: true
+        }, tinyInstance,
+          updateView = function(editor) {
+            var content = editor.getContent({format: options.format}).trim();
+            content = $sce.trustAsHtml(content);
+
+            ngModel.$setViewValue(content);
+            if (!$rootScope.$$phase) {
+              scope.$digest();
+            }
+          };
+
+        function toggleDisable(disabled) {
+          if (disabled) {
+            ensureInstance();
+
+            if (tinyInstance) {
+              tinyInstance.getBody().setAttribute('contenteditable', false);
+            }
+          } else {
+            ensureInstance();
+
+            if (tinyInstance && !tinyInstance.settings.readonly && tinyInstance.getDoc()) {
+              tinyInstance.getBody().setAttribute('contenteditable', true);
+            }
+          }
+        }
+
+        // fetch a unique ID from the service
+        var uniqueId = uiTinymceService.getUniqueId();
+        attrs.$set('id', uniqueId);
+
+        expression = {};
+
+        angular.extend(expression, scope.$eval(attrs.uiTinymce));
+
+        //Debounce update and save action
+        var debouncedUpdate = (function(debouncedUpdateDelay) {
+          var debouncedUpdateTimer;
+          return function(ed) {
+	        $timeout.cancel(debouncedUpdateTimer);
+	         debouncedUpdateTimer = $timeout(function() {
+              return (function(ed) {
+                if (ed.isDirty()) {
+                  ed.save();
+                  updateView(ed);
+                }
+              })(ed);
+            }, debouncedUpdateDelay);
+          };
+        })(400);
+
+        var setupOptions = {
+          // Update model when calling setContent
+          // (such as from the source editor popup)
+          setup: function(ed) {
+            ed.on('init', function() {
+              ngModel.$render();
+              ngModel.$setPristine();
+                ngModel.$setUntouched();
+              if (form) {
+                form.$setPristine();
+              }
+            });
+
+            // Update model when:
+            // - a button has been clicked [ExecCommand]
+            // - the editor content has been modified [change]
+            // - the node has changed [NodeChange]
+            // - an object has been resized (table, image) [ObjectResized]
+            ed.on('ExecCommand change NodeChange ObjectResized', function() {
+              if (!options.debounce) {
+                ed.save();
+                updateView(ed);
+              	return;
+              }
+              debouncedUpdate(ed);
+            });
+
+            ed.on('blur', function() {
+              element[0].blur();
+              ngModel.$setTouched();
+              if (!$rootScope.$$phase) {
+                scope.$digest();
+              }
+            });
+
+            ed.on('remove', function() {
+              element.remove();
+            });
+
+            if (uiTinymceConfig.setup) {
+              uiTinymceConfig.setup(ed, {
+                updateView: updateView
+              });
+            }
+
+            if (expression.setup) {
+              expression.setup(ed, {
+                updateView: updateView
+              });
+            }
+          },
+          format: expression.format || 'html',
+          selector: '#' + attrs.id
+        };
+        // extend options with initial uiTinymceConfig and
+        // options from directive attribute value
+        angular.extend(options, uiTinymceConfig, expression, setupOptions);
+        // Wrapped in $timeout due to $tinymce:refresh implementation, requires
+        // element to be present in DOM before instantiating editor when
+        // re-rendering directive
+        $timeout(function() {
+          if (options.baseURL){
+            tinymce.baseURL = options.baseURL;
+          }
+          var maybeInitPromise = tinymce.init(options);
+          if(maybeInitPromise && typeof maybeInitPromise.then === 'function') {
+            maybeInitPromise.then(function() {
+              toggleDisable(scope.$eval(attrs.ngDisabled));
+            });
+          } else {
+            toggleDisable(scope.$eval(attrs.ngDisabled));
+          }
+        });
+
+        ngModel.$formatters.unshift(function(modelValue) {
+          return modelValue ? $sce.trustAsHtml(modelValue) : '';
+        });
+
+        ngModel.$parsers.unshift(function(viewValue) {
+          return viewValue ? $sce.getTrustedHtml(viewValue) : '';
+        });
+
+        ngModel.$render = function() {
+          ensureInstance();
+
+          var viewValue = ngModel.$viewValue ?
+            $sce.getTrustedHtml(ngModel.$viewValue) : '';
+
+          // instance.getDoc() check is a guard against null value
+          // when destruction & recreation of instances happen
+          if (tinyInstance &&
+            tinyInstance.getDoc()
+          ) {
+            tinyInstance.setContent(viewValue);
+            // Triggering change event due to TinyMCE not firing event &
+            // becoming out of sync for change callbacks
+            tinyInstance.fire('change');
+          }
+        };
+
+        attrs.$observe('disabled', toggleDisable);
+
+        // This block is because of TinyMCE not playing well with removal and
+        // recreation of instances, requiring instances to have different
+        // selectors in order to render new instances properly
+        var unbindEventListener = scope.$on('$tinymce:refresh', function(e, id) {
+          var eid = attrs.id;
+          if (angular.isUndefined(id) || id === eid) {
+            var parentElement = element.parent();
+            var clonedElement = element.clone();
+            clonedElement.removeAttr('id');
+            clonedElement.removeAttr('style');
+            clonedElement.removeAttr('aria-hidden');
+            tinymce.execCommand('mceRemoveEditor', false, eid);
+            parentElement.append($compile(clonedElement)(scope));
+            unbindEventListener();
+          }
+        });
+
+        scope.$on('$destroy', function() {
+          ensureInstance();
+
+          if (tinyInstance) {
+            tinyInstance.remove();
+            tinyInstance = null;
+          }
+        });
+
+        function ensureInstance() {
+          if (!tinyInstance) {
+            tinyInstance = tinymce.get(attrs.id);
+          }
+        }
+      }
+    };
+  }])
+  .service('uiTinymceService', [
+    /**
+     * A service is used to create unique ID's, this prevents duplicate ID's if there are multiple editors on screen.
+     */
+    function() {
+      var UITinymceService = function() {
+   	    var ID_ATTR = 'ui-tinymce';
+    	// uniqueId keeps track of the latest assigned ID
+    	var uniqueId = 0;
+        // getUniqueId returns a unique ID
+    	var getUniqueId = function() {
+          uniqueId ++;
+          return ID_ATTR + '-' + uniqueId;
+        };
+        // return the function as a public method of the service
+        return {
+        	getUniqueId: getUniqueId
+        };
+      };
+      // return a new instance of the service
+      return new UITinymceService();
+    }
+  ]);
+
+},{}],83:[function(require,module,exports){
 /**
  * @license AngularJS v1.6.6
  * (c) 2010-2017 Google, Inc. http://angularjs.org
@@ -50392,11 +50629,11 @@ $provide.value("$locale", {
 })(window);
 
 !window.angular.$$csp().noInlineStyle && window.angular.element(document.head).prepend('<style type="text/css">@charset "UTF-8";[ng\\:cloak],[ng-cloak],[data-ng-cloak],[x-ng-cloak],.ng-cloak,.x-ng-cloak,.ng-hide:not(.ng-hide-animate){display:none !important;}ng\\:form{display:block;}.ng-animate-shim{visibility:hidden;}.ng-anchor{position:absolute;}</style>');
-},{}],83:[function(require,module,exports){
+},{}],84:[function(require,module,exports){
 require('./angular');
 module.exports = angular;
 
-},{"./angular":82}],84:[function(require,module,exports){
+},{"./angular":83}],85:[function(require,module,exports){
 /*!
  * jQuery JavaScript Library v3.2.1
  * https://jquery.com/
@@ -60651,7 +60888,7 @@ if ( !noGlobal ) {
 return jQuery;
 } );
 
-},{}],85:[function(require,module,exports){
+},{}],86:[function(require,module,exports){
 (function (global){
 'use strict';
 
@@ -60665,6 +60902,7 @@ require('angular-resource');
 require('angular-animate');
 require('angular-cookies');
 require('@uirouter/angularjs');
+require('angular-ui-tinymce');
 
 //main module
 require('./app.js');
@@ -60675,8 +60913,11 @@ require('./app.config.js');
 require('./modules/admin/admin.js');
 require('./modules/admin/services/AuthFactory.js');
 require('./modules/admin/admin.templates.js');
+require('./modules/admin/components/maPostTable/maPostTable.component.js');
+require('./modules/admin/components/maTextEditor/maTextEditor.component.js');
 require('./modules/admin/components/maLoginForm/maLoginForm.component.js');
 require('./modules/core/core.js');
+require('./modules/core/services/PostFactory.js');
 require('./modules/core/core.templates.js');
 require('./modules/core/components/maArticleListItem/maArticleListItem.component.js');
 require('./modules/core/components/maArticlesList/maArticlesList.component.js');
@@ -60689,6 +60930,10 @@ require('./modules/layout/components/maHeader/maHeader.component.js');
 require('./modules/layout/components/maSidebar/maSidebar.component.js');
 require('./modules/routes/routes.js');
 require('./modules/routes/routes.templates.js');
+require('./modules/routes/components/maAdminCategories/maAdminCategories.component.js');
+require('./modules/routes/components/maAdminImages/maAdminImages.component.js');
+require('./modules/routes/components/maAdminComments/maAdminComments.component.js');
+require('./modules/routes/components/maAdminPosts/maAdminPosts.component.js');
 require('./modules/routes/components/maLogin/maLogin.component.js');
 require('./modules/routes/components/maHome/maHome.component.js');
 require('./modules/routes/components/maControlPanel/maControlPanel.component.js');
@@ -60696,15 +60941,14 @@ require('./modules/routes/components/maAdminDashboard/maAdminDashboard.component
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
 
-},{"./app.config.js":86,"./app.js":87,"./app.routes.js":88,"./modules/admin/admin.js":89,"./modules/admin/admin.templates.js":90,"./modules/admin/components/maLoginForm/maLoginForm.component.js":91,"./modules/admin/services/AuthFactory.js":92,"./modules/core/components/maArticleListItem/maArticleListItem.component.js":93,"./modules/core/components/maArticlesList/maArticlesList.component.js":94,"./modules/core/core.js":95,"./modules/core/core.templates.js":96,"./modules/layout/components/maFooter/maFooter.component.js":97,"./modules/layout/components/maHeader/maHeader.component.js":98,"./modules/layout/components/maLandingPage/maLandingPage.component.js":99,"./modules/layout/components/maNavbar/maNavbar.component.js":100,"./modules/layout/components/maSidebar/maSidebar.component.js":101,"./modules/layout/layout.js":102,"./modules/layout/layout.templates.js":103,"./modules/routes/components/maAdminDashboard/maAdminDashboard.component.js":104,"./modules/routes/components/maControlPanel/maControlPanel.component.js":105,"./modules/routes/components/maHome/maHome.component.js":106,"./modules/routes/components/maLogin/maLogin.component.js":107,"./modules/routes/routes.js":108,"./modules/routes/routes.templates.js":109,"@uirouter/angularjs":1,"angular":83,"angular-animate":75,"angular-cookies":77,"angular-messages":79,"angular-resource":81,"jquery":84}],86:[function(require,module,exports){
-
-},{}],87:[function(require,module,exports){
-angular.module('maestris', ['admin', 'routes', 'layout', 'core', 'ui.router', 'ngMessages', 'ngAnimate', 'ngCookies', 'ngResource']);
+},{"./app.config.js":87,"./app.js":88,"./app.routes.js":89,"./modules/admin/admin.js":90,"./modules/admin/admin.templates.js":91,"./modules/admin/components/maLoginForm/maLoginForm.component.js":92,"./modules/admin/components/maPostTable/maPostTable.component.js":93,"./modules/admin/components/maTextEditor/maTextEditor.component.js":94,"./modules/admin/services/AuthFactory.js":95,"./modules/core/components/maArticleListItem/maArticleListItem.component.js":96,"./modules/core/components/maArticlesList/maArticlesList.component.js":97,"./modules/core/core.js":98,"./modules/core/core.templates.js":99,"./modules/core/services/PostFactory.js":100,"./modules/layout/components/maFooter/maFooter.component.js":101,"./modules/layout/components/maHeader/maHeader.component.js":102,"./modules/layout/components/maLandingPage/maLandingPage.component.js":103,"./modules/layout/components/maNavbar/maNavbar.component.js":104,"./modules/layout/components/maSidebar/maSidebar.component.js":105,"./modules/layout/layout.js":106,"./modules/layout/layout.templates.js":107,"./modules/routes/components/maAdminCategories/maAdminCategories.component.js":108,"./modules/routes/components/maAdminComments/maAdminComments.component.js":109,"./modules/routes/components/maAdminDashboard/maAdminDashboard.component.js":110,"./modules/routes/components/maAdminImages/maAdminImages.component.js":111,"./modules/routes/components/maAdminPosts/maAdminPosts.component.js":112,"./modules/routes/components/maControlPanel/maControlPanel.component.js":113,"./modules/routes/components/maHome/maHome.component.js":114,"./modules/routes/components/maLogin/maLogin.component.js":115,"./modules/routes/routes.js":116,"./modules/routes/routes.templates.js":117,"@uirouter/angularjs":1,"angular":84,"angular-animate":75,"angular-cookies":77,"angular-messages":79,"angular-resource":81,"angular-ui-tinymce":82,"jquery":85}],87:[function(require,module,exports){
 
 },{}],88:[function(require,module,exports){
+angular.module('maestris', ['admin', 'routes', 'layout', 'core', 'ui.tinymce', 'ui.router', 'ngMessages', 'ngAnimate', 'ngCookies', 'ngResource']);
+
+},{}],89:[function(require,module,exports){
 angular.module('maestris').config(function ($stateProvider, $urlRouterProvider, $locationProvider) {
     $urlRouterProvider.otherwise("/");
-    $locationProvider.html5Mode(true);
     $stateProvider.state('home', {
         url: "/",
         component: "maHome"
@@ -60717,21 +60961,39 @@ angular.module('maestris').config(function ($stateProvider, $urlRouterProvider, 
     }).state('admin.dashboard', {
         url: '/dashboard',
         component: 'maAdminDashboard'
+    }).state('admin.posts', {
+        url: '/articles',
+        component: 'maAdminPosts'
+    }).state('admin.categories', {
+        url: '/categories',
+        component: 'maAdminCategories'
+    }).state('admin.comments', {
+        url: '/commentaires',
+        component: 'maAdminComments'
+    }).state('admin.images', {
+        url: '/images',
+        component: 'maAdminImages'
     });
 });
 
-},{}],89:[function(require,module,exports){
+},{}],90:[function(require,module,exports){
 
 'use strict';
 
 angular.module('admin', []);
 
-},{}],90:[function(require,module,exports){
+},{}],91:[function(require,module,exports){
 angular.module('admin').run(['$templateCache', function ($templateCache) {
     $templateCache.put('maLoginForm.component.html', "<div class=\"maLoginForm-component\">\n    <h1>Identification</h1>\n    <form>\n        <div class=\"form-control\">\n            <label>login</label>\n            <input type=\"text\" ng-model=\"$ctrl.credentials.login\"/>\n        </div>\n        <div class=\"form-control\">\n            <label>mot de passe</label>\n            <input type=\"password\" ng-model=\"$ctrl.credentials.password\"/>\n        </div>\n        <div class=\"form-control\">\n            <button ng-click=$ctrl.onLogin()><i class='fa fa-sign-in'></i> Connexion</button>\n        </div>\n        <p ng-if=\"$ctrl.failed\">*Identifiants incorrects.</p>\n    </form>\n    <a href=\"/\">retour à l'accueil</a>\n</div>\n");
 }]);
+angular.module('admin').run(['$templateCache', function ($templateCache) {
+    $templateCache.put('maPostTable.component.html', "<div class=\"maPostTable-component\">\n    <table>\n        <thead>\n            <tr>\n                <th>Titre</th>\n                <th>Categorie</th>\n                <th>Date de publication</th>\n                <th>Commentaires</th>\n                <th>Options</th>\n            </tr>\n        </thead>\n        <tbody>\n            <tr ng-repeat=\"post in $ctrl.posts\">\n                <td>{{post.title}}</td>\n                <td>{{post.category_name}}</td>\n                <td>{{post.created_at | date : 'EEE d MMM yyyy'}}</td>\n                <td>Soon</td>\n                <td>\n                    <button>Voir</button>\n                    <button>Editer</button>\n                    <button>Supprimer</button>\n                </td>\n            </tr>\n        </tbody>\n    </table>\n</div>\n");
+}]);
+angular.module('admin').run(['$templateCache', function ($templateCache) {
+    $templateCache.put('maTextEditor.component.html', "<div class=\"maTextEditor-component\">\n      <textarea ui-tinymce=\"$ctrl.tinymceOptions\" ng-model=\"$ctrl.model\" ng-change=\"$ctrl.setPost()\"></textarea>\n</div>\n");
+}]);
 
-},{}],91:[function(require,module,exports){
+},{}],92:[function(require,module,exports){
 
 'use strict';
 
@@ -60747,7 +61009,56 @@ angular.module('admin').component('maLoginForm', {
 
 function maLoginFormController() {};
 
-},{}],92:[function(require,module,exports){
+},{}],93:[function(require,module,exports){
+
+'use strict';
+
+angular.module('admin').component('maPostTable', {
+  bindings: {
+    posts: '<'
+  },
+  templateUrl: 'maPostTable.component.html',
+  controller: maPostTableController
+});
+
+function maPostTableController() {
+  let $ctrl = this;
+
+  $ctrl.$onInit = function () {
+    console.log($ctrl);
+  };
+};
+
+},{}],94:[function(require,module,exports){
+
+'use strict';
+
+angular.module('admin').component('maTextEditor', {
+    bindings: {
+        model: '<',
+        onChange: '&'
+    },
+    templateUrl: 'maTextEditor.component.html',
+    controller: maTextEditorController
+});
+
+function maTextEditorController() {
+    let $ctrl = this;
+
+    $ctrl.tinymceOptions = {
+        plugins: 'advlist autolink link image lists charmap preview colorpicker textcolor autoresize emoticons wordcount',
+        toolbar: "bold italic underline strikethrough forecolor backcolor alignleft aligncenter alignright alignjustify image styleselect fontsizeselect emoticons",
+        autorzsize_bottom_margin: 30,
+        autoresize_on_init: false,
+        theme: 'modern'
+    };
+
+    $ctrl.setPost = function () {
+        $ctrl.onChange({ model: $ctrl.model });
+    };
+};
+
+},{}],95:[function(require,module,exports){
 
 'use strict';
 
@@ -60777,7 +61088,7 @@ angular.module('admin').factory('AuthFactory', $http => {
     };
 });
 
-},{}],93:[function(require,module,exports){
+},{}],96:[function(require,module,exports){
 
 'use strict';
 
@@ -60794,7 +61105,7 @@ function maArticleListItemController() {
   };
 };
 
-},{}],94:[function(require,module,exports){
+},{}],97:[function(require,module,exports){
 
 'use strict';
 
@@ -60811,13 +61122,13 @@ function maArticlesListController() {
   };
 };
 
-},{}],95:[function(require,module,exports){
+},{}],98:[function(require,module,exports){
 
 'use strict';
 
 angular.module('core', []);
 
-},{}],96:[function(require,module,exports){
+},{}],99:[function(require,module,exports){
 angular.module('core').run(['$templateCache', function ($templateCache) {
     $templateCache.put('maArticleListItem.component.html', "<div class=\"maArticleListItem-component\">\n  <p>{{$ctrl.name}} works!</p>\n</div>");
 }]);
@@ -60825,7 +61136,30 @@ angular.module('core').run(['$templateCache', function ($templateCache) {
     $templateCache.put('maArticlesList.component.html', "<div class=\"maArticlesList-component\">\n  <p>{{$ctrl.name}} works!</p>\n</div>");
 }]);
 
-},{}],97:[function(require,module,exports){
+},{}],100:[function(require,module,exports){
+
+'use strict';
+
+angular.module('core').factory('PostFactory', $http => {
+    return {
+        getPosts: function () {
+            return $http.get('/api/posts').then(function (response) {
+                return response;
+            }).catch(function (error) {
+                return error;
+            });
+        },
+        addPost: function (post) {
+            return $http.post('/api/posts', post).then(function (response) {
+                return response;
+            }).catch(function (error) {
+                return error;
+            });
+        }
+    };
+});
+
+},{}],101:[function(require,module,exports){
 
 'use strict';
 
@@ -60842,7 +61176,7 @@ function maFooterController() {
   };
 };
 
-},{}],98:[function(require,module,exports){
+},{}],102:[function(require,module,exports){
 
 'use strict';
 
@@ -60859,7 +61193,7 @@ function maHeaderController() {
   };
 };
 
-},{}],99:[function(require,module,exports){
+},{}],103:[function(require,module,exports){
 
 'use strict';
 
@@ -60876,7 +61210,7 @@ function maLandingPageController() {
   };
 };
 
-},{}],100:[function(require,module,exports){
+},{}],104:[function(require,module,exports){
 
 'use strict';
 
@@ -60893,7 +61227,7 @@ function maNavbarController() {
   };
 };
 
-},{}],101:[function(require,module,exports){
+},{}],105:[function(require,module,exports){
 
 'use strict';
 
@@ -60905,34 +61239,74 @@ angular.module('layout').component('maSidebar', {
   controller: maSidebarController
 });
 
-function maSidebarController() {
+function maSidebarController($location) {
   let $ctrl = this;
+
+  $ctrl.activeSection;
+
+  $ctrl.$onInit = function () {
+    $ctrl.activeSection = $location.path().substr(7);
+  };
 };
 
-},{}],102:[function(require,module,exports){
+},{}],106:[function(require,module,exports){
 
 'use strict';
 
 angular.module('layout', []);
 
-},{}],103:[function(require,module,exports){
+},{}],107:[function(require,module,exports){
+angular.module('layout').run(['$templateCache', function ($templateCache) {
+    $templateCache.put('maHeader.component.html', "<div class=\"maHeader-component\">\n  <p>{{$ctrl.name}} works!</p>\n</div>");
+}]);
 angular.module('layout').run(['$templateCache', function ($templateCache) {
     $templateCache.put('maLandingPage.component.html', "<div class=\"maLandingPage-component\">\n  <h1>\n      Maestris Cambrai\n  </h1>\n</div>\n");
 }]);
 angular.module('layout').run(['$templateCache', function ($templateCache) {
-    $templateCache.put('maFooter.component.html', "<div class=\"maFooter-component\">\n    &#9400;2017 | <a href=\"/login\">Accès administrateur</a>\n</div>\n");
+    $templateCache.put('maFooter.component.html', "<div class=\"maFooter-component\">\n    &#9400;2017 | <a href=\"#!/login\">Accès administrateur</a>\n</div>\n");
+}]);
+angular.module('layout').run(['$templateCache', function ($templateCache) {
+    $templateCache.put('maSidebar.component.html', "<div class=\"maSidebar-component\">\n  <ul>\n      <li ng-class=\"{'active':$ctrl.activeSection =='dashboard'}\">\n          <a href=\"#!/admin/dashboard\" ng-click=\"$ctrl.activeSection='dashboard'\">Dashboard</a>\n      </li>\n      <li ng-class=\"{'active':$ctrl.activeSection =='articles'}\">\n          <a href=\"#!/admin/articles\" ng-click=\"$ctrl.activeSection='articles'\">Articles</a>\n      </li>\n      <li ng-class=\"{'active':$ctrl.activeSection =='categories'}\">\n          <a href=\"#!/admin/categories\" ng-click=\"$ctrl.activeSection='categories'\">Catégories</a>\n      </li>\n      <li ng-class=\"{'active':$ctrl.activeSection =='commentaires'}\">\n          <a href=\"#!/admin/commentaires\" ng-click=\"$ctrl.activeSection='commentaires'\">Commentaires</a>\n      </li>\n      <li ng-class=\"{'active':$ctrl.activeSection =='images'}\">\n          <a href=\"#!/admin/images\" ng-click=\"$ctrl.activeSection='images'\">Images</a>\n      </li>\n\n      <li class=\"logout\">\n          <a href=\"#!/\" ng-click=\"$ctrl.onLogout()\"><i class=\"fa fa-sign-out\" aria-hidden=\"true\"></i>Deconnexion</a>\n      </li>\n  </ul>\n</div>\n");
 }]);
 angular.module('layout').run(['$templateCache', function ($templateCache) {
     $templateCache.put('maNavbar.component.html', "<div class=\"maNavbar-component\">\n    <ul>\n        <li>\n            <a href=\"#\">Accueil</a>\n        </li>\n        <li>\n            <a href=\"#\">A propos</a>\n        </li>\n        <li>\n            <a href=\"#\">Articles</a>\n        </li>\n        <li>\n            <a href=\"#\">Archives</a>\n        </li>\n        <li>\n            <a href=\"#\">Contact</a>\n        </li>\n\n    </ul>\n</div>\n");
 }]);
-angular.module('layout').run(['$templateCache', function ($templateCache) {
-    $templateCache.put('maSidebar.component.html', "<div class=\"maSidebar-component\">\n  <ul>\n      <li>\n          <a href=\"#\">Dashboard</a>\n      </li>\n      <li>\n          <a href=\"#\">Articles</a>\n      </li>\n      <li>\n          <a href=\"#\">Commentaires</a>\n      </li>\n      <li>\n          <a href=\"#\">Images</a>\n      </li>\n\n      <li class=\"logout\">\n          <a href=\"/\" ng-click=\"$ctrl.onLogout()\"><i class=\"fa fa-sign-out\" aria-hidden=\"true\"></i>Deconnexion</a>\n      </li>\n  </ul>\n</div>\n");
-}]);
-angular.module('layout').run(['$templateCache', function ($templateCache) {
-    $templateCache.put('maHeader.component.html', "<div class=\"maHeader-component\">\n  <p>{{$ctrl.name}} works!</p>\n</div>");
-}]);
 
-},{}],104:[function(require,module,exports){
+},{}],108:[function(require,module,exports){
+
+'use strict';
+
+angular.module('routes').component('maAdminCategories', {
+  templateUrl: 'maAdminCategories.component.html',
+  controller: maAdminCategoriesController
+});
+
+function maAdminCategoriesController() {
+  let $ctrl = this;
+
+  $ctrl.$onInit = function () {
+    $ctrl.name = "maAdminCategories";
+  };
+};
+
+},{}],109:[function(require,module,exports){
+
+'use strict';
+
+angular.module('routes').component('maAdminComments', {
+  templateUrl: 'maAdminComments.component.html',
+  controller: maAdminCommentsController
+});
+
+function maAdminCommentsController() {
+  let $ctrl = this;
+
+  $ctrl.$onInit = function () {
+    $ctrl.name = "maAdminComments";
+  };
+};
+
+},{}],110:[function(require,module,exports){
 
 'use strict';
 
@@ -60949,7 +61323,63 @@ function maAdminDashboardController() {
   };
 };
 
-},{}],105:[function(require,module,exports){
+},{}],111:[function(require,module,exports){
+
+'use strict';
+
+angular.module('routes').component('maAdminImages', {
+  templateUrl: 'maAdminImages.component.html',
+  controller: maAdminImagesController
+});
+
+function maAdminImagesController() {
+  let $ctrl = this;
+
+  $ctrl.$onInit = function () {
+    $ctrl.name = "maAdminImages";
+  };
+};
+
+},{}],112:[function(require,module,exports){
+
+'use strict';
+
+angular.module('routes').component('maAdminPosts', {
+    templateUrl: 'maAdminPosts.component.html',
+    controller: maAdminPostsController
+});
+
+function maAdminPostsController(PostFactory) {
+    let $ctrl = this;
+
+    $ctrl.$onInit = function () {
+        $ctrl.name = "maAdminPosts";
+        $ctrl.newPost = {};
+        $ctrl.getPosts();
+    };
+
+    $ctrl.getPosts = function () {
+        PostFactory.getPosts().then(function (response) {
+            $ctrl.posts = response.data;
+        }).catch(function (error) {
+            console.log(error);
+        });
+    };
+
+    $ctrl.changeBody = function (model) {
+        $ctrl.newPost.body = model;
+    };
+
+    $ctrl.addPost = function () {
+        PostFactory.addPost($ctrl.newPost).then(function (response) {
+            console.log(response);
+        }).catch(function (error) {
+            console.log(error);
+        });
+    };
+};
+
+},{}],113:[function(require,module,exports){
 
 'use strict';
 
@@ -60969,9 +61399,7 @@ function maControlPanelController(AuthFactory, $state) {
         });
     };
     $ctrl.logout = function () {
-        console.log('recieved the call from sidebar');
         AuthFactory.logout().then(function (response) {
-            console.log('logged out');
             $state.go('home');
         }).catch(function (error) {
             console.log(error);
@@ -60979,7 +61407,7 @@ function maControlPanelController(AuthFactory, $state) {
     };
 };
 
-},{}],106:[function(require,module,exports){
+},{}],114:[function(require,module,exports){
 
 'use strict';
 
@@ -60996,7 +61424,7 @@ function maHomeController() {
   };
 };
 
-},{}],107:[function(require,module,exports){
+},{}],115:[function(require,module,exports){
 
 'use strict';
 
@@ -61030,26 +61458,38 @@ function maLoginController(AuthFactory, $state) {
     };
 };
 
-},{}],108:[function(require,module,exports){
+},{}],116:[function(require,module,exports){
 
 'use strict';
 
 angular.module('routes', []);
 
-},{}],109:[function(require,module,exports){
+},{}],117:[function(require,module,exports){
 angular.module('routes').run(['$templateCache', function ($templateCache) {
-    $templateCache.put('maAdminDashboard.component.html', "<div class=\"maAdminDashboard-component\">\n  <p>{{$ctrl.name}} works!</p>\n</div>\n");
+    $templateCache.put('maAdminComments.component.html', "<div class=\"maAdminComments-component\">\n    <h1>Commentaires</h1>\n</div>\n");
 }]);
 angular.module('routes').run(['$templateCache', function ($templateCache) {
-    $templateCache.put('maHome.component.html', "<div class=\"maHome-component\">\n  <ma-navbar></ma-navbar>\n  <ma-landing-page></ma-landing-page>\n  <ma-articles-list></ma-articles-list>\n  <ma-footer></ma-footer>\n</div>\n");
+    $templateCache.put('maAdminCategories.component.html', "<div class=\"maAdminCategories-component\">\n  <p>{{$ctrl.name}} works!</p>\n</div>");
+}]);
+angular.module('routes').run(['$templateCache', function ($templateCache) {
+    $templateCache.put('maAdminDashboard.component.html', "<div class=\"maAdminDashboard-component\">\n    <div>Vous avez X nouveaux commentaires</div>\n    <div>Vous avez X nouveaux messages</div>\n    <div>Total articles</div>\n    <div>Total commentaires</div>\n    <div>Total messages</div>\n\n    <div>Dernier article :</div>\n</div>\n");
+}]);
+angular.module('routes').run(['$templateCache', function ($templateCache) {
+    $templateCache.put('maAdminImages.component.html', "<div class=\"maAdminImages-component\">\n  <p>{{$ctrl.name}} works!</p>\n</div>");
+}]);
+angular.module('routes').run(['$templateCache', function ($templateCache) {
+    $templateCache.put('maAdminPosts.component.html', "<div class=\"maAdminPosts-component\">\n    <h2>Vos articles</h2>\n    <ma-post-table posts=\"$ctrl.posts\"></ma-post-table>\n    <h2>Nouvel article</h2>\n    <form ng-submit=\"$ctrl.addPost()\">\n        <div class=\"form-control\">\n            <input type=\"test\" ng-model=\"$ctrl.newPost.title\" placeholder=\"Titre de votre article\"/>\n        </div>\n        <div class=\"form-control\">\n            <input type=\"test\" ng-model=\"$ctrl.newPost.summary\" placeholder=\"En-tête de votre article\"/>\n        </div>\n        <div class=\"form-control\">\n            <ma-text-editor model=\"$ctrl.newPost.body\" on-change=\"$ctrl.changeBody(model)\"></ma-text-editor>\n        </div>\n        <div class=\"form-control\">\n            <input type=\"submit\" value=\"Publier l'article\"/>\n        </div>\n    </form>\n</div>\n");
 }]);
 angular.module('routes').run(['$templateCache', function ($templateCache) {
     $templateCache.put('maControlPanel.component.html', "<div class=\"maControlPanel-component\">\n    <div class=\"col-left\">\n        <ma-sidebar on-logout=\"$ctrl.logout()\"></ma-sidebar>\n    </div>\n    <div class=\"col-right\">\n        <ui-view></ui-view>\n    </div>\n</div>\n");
 }]);
 angular.module('routes').run(['$templateCache', function ($templateCache) {
+    $templateCache.put('maHome.component.html', "<div class=\"maHome-component\">\n  <ma-navbar></ma-navbar>\n  <ma-landing-page></ma-landing-page>\n  <ma-articles-list></ma-articles-list>\n  <ma-footer></ma-footer>\n</div>\n");
+}]);
+angular.module('routes').run(['$templateCache', function ($templateCache) {
     $templateCache.put('maLogin.component.html', "<div class=\"maLogin-component\">\n    <ma-login-form credentials='$ctrl.credentials' on-login=\"$ctrl.login()\" failed=\"$ctrl.failed\"></ma-login-form>\n</div>\n");
 }]);
 
-},{}]},{},[85])
+},{}]},{},[86])
 
 //# sourceMappingURL=bundle.js.map
