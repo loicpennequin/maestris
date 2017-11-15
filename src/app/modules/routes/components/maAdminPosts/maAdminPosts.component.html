@@ -2,6 +2,7 @@
     <h2>Vos articles</h2>
     <ma-post-table posts="$ctrl.posts"></ma-post-table>
     <h2>Nouvel article</h2>
+    <p class="warning">ATTENTION : Faites attention à remplir tous les champs y compris la categorie. Laissez un champ vide pourrait éventuellement faire planter le serveur. A terme il y aura une vérification automatique bien entendu, mais en attendant il faut ouvrir l'oeil !</p>
     <form ng-submit="$ctrl.addPost()">
         <div class="form-control">
             <input type="test" ng-model="$ctrl.newPost.title" placeholder="Titre de votre article"/>

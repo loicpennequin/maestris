@@ -1,3 +1,4 @@
 <div class="maArticlesList-component">
-  <p>{{$ctrl.name}} works!</p>
+  <h2>Nos articles</h2>
+  <ma-article-list-item ng-repeat="p in $ctrl.posts" post="p"></ma-article-list-item>
 </div>

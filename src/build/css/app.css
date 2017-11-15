@@ -25,6 +25,11 @@ button, input[type="submit"] {
 input:focus, button:focus, select:focus, textarea:focus {
   outline-color: #c8376c; }
 
+.maHome-component main {
+  margin: 0 auto;
+  width: 85%;
+  max-width: 1080px; }
+
 .maLogin-component {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -41,7 +46,7 @@ input:focus, button:focus, select:focus, textarea:focus {
   color: #f7f7f7; }
 
 .maControlPanel-component header {
-  position: relative;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
@@ -55,9 +60,11 @@ input:focus, button:focus, select:focus, textarea:focus {
     float: right;
     color: #6c92e0;
     font-family: "Open Sans", Arial, Helvetica, sans-serif;
-    font-size: 0.6em; }
+    font-size: 0.6em;
+    font-weight: normal; }
 
 .maControlPanel-component main {
+  margin-top: 50px;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -104,6 +111,28 @@ input:focus, button:focus, select:focus, textarea:focus {
         font-family: "Open Sans", Arial, Helvetica, sans-serif; }
     .maControlPanel-component form .form-control .maTextEditor-component {
       margin-top: 25px; }
+  .maControlPanel-component form .form-control-inline {
+    margin: 10px 0; }
+    .maControlPanel-component form .form-control-inline input {
+      margin: 0;
+      padding: 10px; }
+      .maControlPanel-component form .form-control-inline input[type="submit"] {
+        width: auto;
+        padding: 10px;
+        padding-bottom: 12px;
+        border-top-right-radius: 6px;
+        border-bottom-right-radius: 6px;
+        color: #f7f7f7;
+        font-family: "Open Sans", Arial, Helvetica, sans-serif;
+        font-weight: 700;
+        cursor: pointer;
+        -webkit-transform: translateX(-4px);
+                transform: translateX(-4px);
+        background: -webkit-gradient(linear, left top, left bottom, from(#c8376c), to(#a02c56));
+        background: linear-gradient(#c8376c, #a02c56); }
+        .maControlPanel-component form .form-control-inline input[type="submit"]:hover {
+          background: -webkit-gradient(linear, left top, left bottom, from(#dd5587), to(#c8376c));
+          background: linear-gradient(#dd5587, #c8376c); }
 
 .maControlPanel-component table {
   width: 100%;
@@ -143,6 +172,10 @@ input:focus, button:focus, select:focus, textarea:focus {
       .maControlPanel-component table td button:nth-of-type(3):hover {
         background: #d1476a; }
 
+.maAdminPosts-component .warning {
+  font-size: 1.3em;
+  color: #db708b; }
+
 .maNavbar-component {
   background: #292537;
   color: #f7f7f7;
@@ -178,6 +211,12 @@ input:focus, button:focus, select:focus, textarea:focus {
         left: 10%;
         width: 80%; }
 
+.maFooter-component {
+  background: #c8376c;
+  padding: 15px;
+  color: #f7f7f7;
+  margin-top: 50px; }
+
 .maLandingPage-component {
   height: 65vh;
   background: url("../img/header-bg.jpg");
@@ -205,7 +244,7 @@ input:focus, button:focus, select:focus, textarea:focus {
     text-shadow: 0 0 10px #292537, 10px 5px 2px #0a0a0a;
     mix-blend-mode: lighten; }
     .maLandingPage-component h1::first-letter {
-      font-size: 2.5em;
+      font-size: 2em;
       color: #c8376c; }
 
 .maSidebar-component {
@@ -234,13 +273,11 @@ input:focus, button:focus, select:focus, textarea:focus {
     .maSidebar-component ul li {
       padding: 15px 30px;
       font-family: "Open Sans", Arial, Helvetica, sans-serif;
-      font-size: 1.1em;
+      font-size: 1em;
       position: relative;
       text-align: center; }
       .maSidebar-component ul li:hover {
         color: #c8376c; }
-      .maSidebar-component ul li.logout {
-        font-size: 1.2em; }
       .maSidebar-component ul li.active {
         background: #352f46; }
         .maSidebar-component ul li.active::before {
@@ -268,6 +305,28 @@ input:focus, button:focus, select:focus, textarea:focus {
         font-size: 2em;
         text-align: center; }
 
+.maArticleListItem-component {
+  font-family: "Open Sans", Arial, Helvetica, sans-serif;
+  border: #d1d1d1 1px solid;
+  margin: 15px auto;
+  padding: 10px; }
+  .maArticleListItem-component .post-title {
+    font-size: 1.5em;
+    border-bottom: 2px #c8376c solid;
+    font-weight: 700; }
+    .maArticleListItem-component .post-title span {
+      float: right;
+      font-weight: 400; }
+  .maArticleListItem-component .post-summary {
+    color: #c8376c;
+    font-size: 1.15em; }
+  .maArticleListItem-component .post-body {
+    font-family: "Fenix", Georgia, serif; }
+  .maArticleListItem-component h1 {
+    font-size: 1.2em; }
+  .maArticleListItem-component h2, .maArticleListItem-component h3, .maArticleListItem-component h4, .maArticleListItem-component h5, .maArticleListItem-component h6 {
+    font-size: 1em; }
+
 .maLoginForm-component h1 {
   background: #c8376c;
   border-top-left-radius: 6px;
@@ -294,6 +353,8 @@ input:focus, button:focus, select:focus, textarea:focus {
     font-weight: 700;
     font-size: 1.1em;
     margin-bottom: 5px; }
+  .maLoginForm-component .form-control input {
+    width: 100%; }
   .maLoginForm-component .form-control button {
     color: #f7f7f7;
     padding: 10px;

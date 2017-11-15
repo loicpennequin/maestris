@@ -1,6 +1,6 @@
 .maControlPanel-component
     header
-        position: relative
+        position: fixed
         top: 0
         left: 0
         width: 100%
@@ -14,8 +14,10 @@
             color: $blue
             font-family: $font-title
             font-size: 0.6em
+            font-weight: normal
 
     main
+        margin-top: 50px
         display: flex
         background: $white
 
@@ -51,6 +53,7 @@
                     cursor: pointer
                     float: right
                     +btn-pink
+
             select
                 padding: 5px
                 border-radius: 6px
@@ -60,6 +63,26 @@
 
             .maTextEditor-component
                 margin-top: 25px
+
+        .form-control-inline
+            margin: 10px 0
+
+            input
+                margin: 0
+                padding: 10px
+                &[type="submit"]
+                    width: auto
+                    padding: 10px
+                    padding-bottom: 12px
+                    border-top-right-radius: 6px
+                    border-bottom-right-radius: 6px
+                    color: $white
+                    font-family: $font-title
+                    font-weight: 700
+                    cursor: pointer
+                    transform: translateX(-4px)
+                    +btn-pink
+
 
 
     //tables

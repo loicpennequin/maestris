@@ -1,6 +1,6 @@
 angular.module('admin').run(['$templateCache', function($templateCache) {
     $templateCache.put('maLoginForm.component.html',
-        "<div class=\"maLoginForm-component\">\r\n    <h1>Identification</h1>\r\n    <form>\r\n        <div class=\"form-control\">\r\n            <label>login</label>\r\n            <input type=\"text\" ng-model=\"$ctrl.credentials.login\"/>\r\n        </div>\r\n        <div class=\"form-control\">\r\n            <label>mot de passe</label>\r\n            <input type=\"password\" ng-model=\"$ctrl.credentials.password\"/>\r\n        </div>\r\n        <div class=\"form-control\">\r\n            <button ng-click=$ctrl.onLogin()><i class='fa fa-sign-in'></i> Connexion</button>\r\n        </div>\r\n        <p ng-if=\"$ctrl.failed\">*Identifiants incorrects.</p>\r\n    </form>\r\n    <a href=\"/\">retour à l'accueil</a>\r\n</div>\r\n");
+        "<div class=\"maLoginForm-component\">\n    <h1>Identification</h1>\n    <form>\n        <div class=\"form-control\">\n            <label>login</label>\n            <input type=\"text\" ng-model=\"$ctrl.credentials.login\"/>\n        </div>\n        <div class=\"form-control\">\n            <label>mot de passe</label>\n            <input type=\"password\" ng-model=\"$ctrl.credentials.password\"/>\n        </div>\n        <div class=\"form-control\">\n            <button ng-click=$ctrl.onLogin()><i class='fa fa-sign-in'></i> Connexion</button>\n        </div>\n        <p ng-if=\"$ctrl.failed\">*Identifiants incorrects.</p>\n    </form>\n    <a href=\"/\">retour à l'accueil</a>\n</div>\n");
 }]);
 angular.module('admin').run(['$templateCache', function($templateCache) {
     $templateCache.put('maPostTable.component.html',
@@ -8,5 +8,5 @@ angular.module('admin').run(['$templateCache', function($templateCache) {
 }]);
 angular.module('admin').run(['$templateCache', function($templateCache) {
     $templateCache.put('maTextEditor.component.html',
-        "<div class=\"maTextEditor-component\">\r\n      <textarea ui-tinymce=\"$ctrl.tinymceOptions\" ng-model=\"$ctrl.model\" ng-change=\"$ctrl.setPost()\"></textarea>\r\n</div>\r\n");
+        "<div class=\"maTextEditor-component\">\n      <textarea ui-tinymce=\"$ctrl.tinymceOptions\" ng-model=\"$ctrl.model\" ng-change=\"$ctrl.setPost()\"></textarea>\n</div>\n");
 }]);

@@ -1,3 +1,5 @@
 <div class="maArticleListItem-component">
-  <p>{{$ctrl.name}} works!</p>
+  <p class="post-title"><strong>{{$ctrl.post.title}}</strong><span>{{$ctrl.post.created_at | date : date : 'EEE d MMM yyyy'}}</span></p>
+  <p class="post-summary">{{$ctrl.post.summary}}</p>
+  <div class="post-body" ng-bind-html="$ctrl.post.body"></div>
 </div>

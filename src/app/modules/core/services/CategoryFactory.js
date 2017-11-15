@@ -13,8 +13,8 @@ angular.module('core')
                     return error
                 })
           },
-          add : function(post){
-              return $http.post('/api/categories', post)
+          add : function(category){
+              return $http.post('/api/categories', category)
                 .then(function(response) {
                     return response;
                 })

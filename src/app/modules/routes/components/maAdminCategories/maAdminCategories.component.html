@@ -1,3 +1,16 @@
 <div class="maAdminCategories-component">
-  <p>{{$ctrl.name}} works!</p>
+    <h2>Liste des categories</h2>
+    <ul>
+        <li ng-repeat="c in $ctrl.categories">{{c.name}}</li>
+    </ul>
+
+    <h2>Ajouter une categorie</h2>
+    <form ng-submit="$ctrl.addCategory()">
+        <div class="form-control-inline">
+            <input type="text" ng-model="$ctrl.newCategory.name" placeholder="Libellé de la categorie">
+            <input type="submit" value="Ajouter"/>
+        </div>
+        <div class="form-control">
+        </div>
+    </form>
 </div>

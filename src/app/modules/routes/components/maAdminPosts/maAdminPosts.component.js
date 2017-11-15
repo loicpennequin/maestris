@@ -40,11 +40,15 @@ function maAdminPostsController(PostFactory, CategoryFactory){
 
   $ctrl.addPost = function(){
       PostFactory.add($ctrl.newPost).then(function(response){
-          $scope.getPosts();
+          console.log('success');
+          console.log(response);
+          $ctrl.getPosts();
           alert('Article ajouté avec succès')
-          $scope.newPost = {};
+          $ctrl.newPost = {};
       })
       .catch(function(error){
+          console.log('error');
+          console.log(error);
           alert("erreur lors de l'ajout de l'article")
       })
   }

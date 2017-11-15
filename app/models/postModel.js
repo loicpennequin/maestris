@@ -24,7 +24,10 @@ module.exports.add = (req,res,next)=>{
     let sql = "INSERT INTO posts SET ?";
 
     let query = db.query(sql, post, (err, result)=>{
-        if (err) throw err;
+        if (err) {
+            console.log(err);
+            throw err;
+        }
         res.json({message: 'post added successfully'});
     });
 };

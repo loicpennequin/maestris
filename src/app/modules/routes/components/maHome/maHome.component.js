@@ -6,10 +6,19 @@ angular.module('routes')
     controller : maHomeController,
   })
 
-function maHomeController(){
+function maHomeController(PostFactory){
   let $ctrl = this;
 
   $ctrl.$onInit = function(){
-    $ctrl.name = "maHome";
+    $ctrl.getPosts();
+  };
+
+  $ctrl.getPosts = function(){
+      PostFactory.getAll().then(function(response){
+          $ctrl.posts = response.data;
+      })
+      .catch(function(error){
+          console.log(error);
+      });
   };
 };
